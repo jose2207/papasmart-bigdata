@@ -1643,7 +1643,7 @@ Requisito: Docker Desktop abierto ("Engine running"), internet (Open-Meteo y des
 </blockquote>
 </li>
 <li>Verifica Docker:
-<div class="highlight"><pre><span></span><code><span class="k">cd</span> /d <span class="s2">&quot;D:\C9\Big Data\AgroSmart_Puno_BigData_COMPLETO&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">cd</span> /d <span class="s2">"D:\C9\Big Data\AgroSmart_Puno_BigData_COMPLETO"</span>
 docker compose version
 docker info
 docker compose --env-file .env -f kafka/compose.yml config -q
@@ -1708,8 +1708,8 @@ docker compose --env-file .env -f uso-agrosmart/compose.yml --profile continuo-t
 docker compose --env-file .env -f uso-agrosmart/compose.yml logs -f producer-temp-continuo
 docker compose --env-file .env -f uso-agrosmart/compose.yml --profile verificacion-temperatura run --rm consumer-verificacion-temp
 docker compose --env-file .env -f uso-agrosmart/compose.yml --profile verificacion-temperatura run --rm consumer-verificacion-empresa-temp
-docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">&quot;SELECT origen, COUNT(*), MAX(fecha_evento) FROM eventos_temperatura GROUP BY origen;&quot;</span>
-docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">&quot;SELECT estado, COUNT(*) FROM eventos_empresariales_temperatura GROUP BY estado;&quot;</span>
+docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">"SELECT origen, COUNT(*), MAX(fecha_evento) FROM eventos_temperatura GROUP BY origen;"</span>
+docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">"SELECT estado, COUNT(*) FROM eventos_empresariales_temperatura GROUP BY estado;"</span>
 </code></pre></div>
 5. Pruebas S8: evento tardío <code>--profile pruebas-temperatura run --rm producer-evento-tardio-temperatura</code> (en <code>uso-agrosmart/compose.yml</code>) y reinicio del consumer con <code>stop</code> / <code>up -d spark-consumer-temperatura</code>.</p>
 <blockquote>
@@ -1736,8 +1736,8 @@ docker compose --env-file .env -f uso-agrosmart/compose.yml --profile verificaci
 docker compose --env-file .env -f uso-agrosmart/compose.yml --profile verificacion run --rm consumer-verificacion-empresa
 
 <span class="p">:</span><span class="c1">: Conteos en PostgreSQL</span>
-docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">&quot;SELECT origen, COUNT(*), MAX(fecha_evento) FROM eventos_telemetria GROUP BY origen;&quot;</span>
-docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">&quot;SELECT horizonte_h, COUNT(*), SUM(CASE WHEN es_retro THEN 1 ELSE 0 END) retro FROM predicciones_humedad GROUP BY 1 ORDER BY 1;&quot;</span>
+docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">"SELECT origen, COUNT(*), MAX(fecha_evento) FROM eventos_telemetria GROUP BY origen;"</span>
+docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agrosmart -d agrosmart_u2 -c <span class="s2">"SELECT horizonte_h, COUNT(*), SUM(CASE WHEN es_retro THEN 1 ELSE 0 END) retro FROM predicciones_humedad GROUP BY 1 ORDER BY 1;"</span>
 
 <span class="p">:</span><span class="c1">: Estado de contenedores y recursos</span>
 docker ps
