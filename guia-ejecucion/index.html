@@ -1667,7 +1667,7 @@ Kafka UI: http://localhost:48086</p>
 <div class="highlight"><pre><span></span><code>docker compose --env-file .env -f uso-agrosmart/compose.yml --profile herramientas run --rm inicializar-topicos
 </code></pre></div></p>
 <p><strong>Paso 3 — Abre el cuaderno U2</strong> <code>Sensorhumedad/U2_AgroSmart_S06_S12_Humedad_Tiempo_Real.ipynb</code> y ejecuta:
-Paso 0 → Paso 1 → <strong>Paso 2</strong> (API + <strong>carga inicial simulada</strong>) → <strong>Paso 3</strong> (entrenar modelos 1/2/3 h).</p>
+sección 0 → <strong>Sesión 06</strong> → <strong>Sesión 07</strong> (API + <strong>carga inicial simulada</strong>) → <strong>sección 10.1</strong> (entrenar modelos 1/2/3 h; solo la primera vez, antes de arrancar el consumer).</p>
 <blockquote>
 <p>El consumer de Spark <strong>no arranca si faltan los modelos</strong> (<code>modelos/humedad_1h|2h|3h</code>): por eso se entrena antes.</p>
 </blockquote>
@@ -1690,7 +1690,7 @@ docker compose --env-file .env -f uso-agrosmart/compose.yml --profile continuo u
 | Exportador Kafka | http://localhost:49309/metrics |
 | Kafka UI | http://localhost:48086 |
 | MkDocs (opcional) | http://localhost:8008 |</p>
-<p>Continúa en el cuaderno: Paso 4 (monitor en vivo), Paso 5, <strong>Paso 6 (predicción a 3 h)</strong>, Paso 7, Paso 8.</p>
+<p>Continúa en el cuaderno en orden: <strong>Sesión 08</strong> (consumer y <strong>monitor en tiempo real 8.3</strong>), <strong>Sesión 09</strong>, <strong>Sesión 10</strong> (entrenamiento e inferencia a 3 h), <strong>Sesión 11</strong> y (Mijael) <strong>Sesión 12</strong>.</p>
 <h2 id="2-bis-dimension-de-mijael-temperatura-azangaro-mismo-docker-topicos-y-tablas-propias">2-bis. DIMENSIÓN DE MIJAEL (temperatura, Azángaro) — mismo Docker, tópicos y tablas propias</h2>
 <p>Requisitos: Kafka y Jupyter arriba (secciones 1 y 2, pasos 1–2; <code>inicializar-topicos</code> ya crea los 4 tópicos).</p>
 <p><strong>DimensiónU1 (batch):</strong> en Jupyter abre <code>U1_Batch_Temperatura/U1_Mijael_Temperatura_S01_S05_Batch.ipynb</code> y ejecútalo de arriba a abajo. Datos simulados en <code>U1_Batch_Temperatura/data/AgroSmart_Temperatura_U1.xlsx</code> (regenerar: <code>python generar_datos_u1_temperatura.py</code>).</p>
@@ -1743,7 +1743,7 @@ docker compose --env-file .env -f pyspark/compose.yml exec postgres psql -U agro
 docker ps
 docker stats --no-stream
 </code></pre></div>
-En el cuaderno (U2, Paso 4.2) hay un <strong>monitor en vivo</strong> y lectura de offsets de Kafka.</p>
+En el cuaderno (U2, Sesión 08, sección <strong>8.3</strong>) hay un <strong>monitor en tiempo real</strong>: cada evento de Kafka con su offset y la predicción que guardó Spark.</p>
 <h2 id="4-pruebas-s8-opcionales-para-sustentar">4. Pruebas S8 (opcionales, para sustentar)</h2>
 <div class="highlight"><pre><span></span><code><span class="p">:</span><span class="c1">: Evento tardío (watermark)</span>
 docker compose --env-file .env -f uso-agrosmart/compose.yml --profile pruebas run --rm producer-evento-tardio
@@ -1783,7 +1783,7 @@ docker compose --env-file .env -f kafka/compose.yml stop
 </tr>
 <tr>
 <td><code>spark-consumer</code> se detiene: <em>falta modelos</em></td>
-<td>Ejecuta el Paso 3 del cuaderno U2 (José: <code>modelos/humedad_*</code>; Mijael: <code>modelos/temperatura_1h</code>) primero.</td>
+<td>Ejecuta la sección 10.1 (Sesión 10) del cuaderno U2 (José: <code>modelos/humedad_*</code>; Mijael: <code>modelos/temperatura_1h</code>) primero.</td>
 </tr>
 <tr>
 <td>Faltan tablas <code>*_temperatura</code> en una base ya existente</td>
