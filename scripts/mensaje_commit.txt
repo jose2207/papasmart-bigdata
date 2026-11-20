@@ -1,0 +1,13 @@
+Producto final U3: AgroSmart Puno completo (batch + streaming + BI/ML + DataOps)
+
+- U1 batch (humedad y temperatura): Spark, calidad, Parquet particionado y MLlib
+- U2 streaming: Open-Meteo -> Kafka (4 tópicos) -> Spark Structured Streaming -> PostgreSQL, flujo cada 2 min
+- Predicción +1/+2/+3 h (humedad) y +1 h con alerta de helada (temperatura)
+- Observabilidad: Prometheus, alertas y dashboard Grafana v4 en 3 partes; costos en S/
+- U3: ejecución integrada con compuertas y manifiesto, hardening, auditoría y CI
+- Corrección de zona horaria (hora de Perú) y reparación de datos
+- MkDocs con informe del proyecto de 14 secciones; presentación y guion de exposición
+- Big Data histórico: 263 534 registros de Open-Meteo (Forecast + ERA5 2012-2026), Spark Bronze/Silver/Gold y MLlib
+- Tablero Grafana de presentación y cuadernos U1, U2, histórico y U3 ejecutados de nuevo
+- Cumplimiento del producto U3 (componentes, rúbrica y autoevaluación), informe del proyecto en PDF y evidencia de Grafana en vivo
+- Grupo 11 · Jose Armando Mamani Poccohuanca y Mijael Yurins Coaquira Justo

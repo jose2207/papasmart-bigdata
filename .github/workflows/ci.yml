@@ -1,0 +1,25 @@
+name: CI · pruebas, auditoría de configuración y documentación
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pyyaml numpy mkdocs==1.6.1 mkdocs-material==9.6.5
+      - name: Pruebas unitarias y de no regresión
+        run: python -m unittest discover -s pruebas -v
+      - name: Lista de comprobación de configuración (S14)
+        run: python scripts/auditoria_config.py --json evidencias/auditoria_config.json
+      - name: Validar Docker Compose con las variables de ejemplo
+        run: |
+          cp .env.example .env
+          for f in kafka/compose.yml obs/compose.yml uso-agrosmart/compose.yml; do docker compose --env-file .env -f "$f" config -q; done
+          docker compose --env-file .env -f pyspark/compose.yml -f pyspark/compose.kafka.yml config -q
+      - name: Documentación (MkDocs, modo estricto)
+        run: mkdocs build --strict

@@ -1,0 +1,25 @@
+{
+  "ejecutado_utc": "2026-11-20T05:50:01.260802+00:00",
+  "integrante": "Mijael Yurins Coaquira Justo",
+  "dimension": "Temperatura exterior (Azángaro) a +1 h",
+  "arquitectura": "Lambda",
+  "datos": "SIMULADOS (120 d horarios)",
+  "filas_bronze": 2880,
+  "filas_silver_gold": 2880,
+  "errores_999": 30,
+  "imputadas_con_respaldo": 45,
+  "duplicados_respaldo_resueltos": 25,
+  "particiones": [
+    "anio_mes=2026-07",
+    "anio_mes=2026-08",
+    "anio_mes=2026-09",
+    "anio_mes=2026-10",
+    "anio_mes=2026-11"
+  ],
+  "modelo_ganador": "Lineal (completo (con lags))",
+  "rmse_prueba_c": 0.9155,
+  "mae_prueba_c": 0.7028,
+  "r2_prueba": 0.9702,
+  "rmse_persistencia_c": 1.4965,
+  "supera_persistencia": true
+}

@@ -1,0 +1,143 @@
+{
+  "runId": "20261120T052733Z",
+  "equipo": [
+    "Jose Armando Mamani Poccohuanca",
+    "Mijael Yurins Coaquira Justo"
+  ],
+  "python": "3.11.6",
+  "plataforma": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "compuertas": {
+    "previas": {
+      "PostgreSQL responde y las 10 tablas existen": true,
+      "Kafka responde y los 4 tópicos existen": true,
+      "Modelos de José (humedad 1/2/3 h) existen": true,
+      "Modelo de Mijael (temperatura 1 h) existe": true,
+      "Parquet Gold de U1 (José y Mijael) existe": true,
+      "Prometheus listo": true,
+      "Pushgateway listo": true,
+      "Grafana saludable": true,
+      "Consumer Spark de José activo (heartbeat < 90 s)": true,
+      "Consumer Spark de Mijael activo (heartbeat < 90 s)": true
+    },
+    "calidad": {
+      "[humedad] hay eventos del flujo vivo (30 min)": true,
+      "[humedad] sin nulos en humedad_suelo_pct/fecha_evento": true,
+      "[humedad] humedad_suelo_pct dentro de [0, 100]": true,
+      "[humedad] sin evento_id duplicado": true,
+      "[humedad] PLAUSIBILIDAD: latencia p50 < 60 s": true,
+      "[temperatura] hay eventos del flujo vivo (30 min)": true,
+      "[temperatura] sin nulos en temperatura_c/fecha_evento": true,
+      "[temperatura] temperatura_c dentro de [-60, 60]": true,
+      "[temperatura] sin evento_id duplicado": true,
+      "[temperatura] PLAUSIBILIDAD: latencia p50 < 60 s": true
+    },
+    "streaming": {
+      "Llegaron eventos nuevos de humedad (José)": true,
+      "Llegaron eventos nuevos de temperatura (Mijael)": true,
+      "Spark generó predicciones nuevas de humedad": true,
+      "Spark generó predicciones nuevas de temperatura": true
+    }
+  },
+  "batch": {
+    "kpiLatenciaPipeline": {
+      "humedad": {
+        "n": 16.0,
+        "promedio": 6.4681086875,
+        "p50": 3.6703265,
+        "p95": 14.018002,
+        "maximo": 30.639793,
+        "frac_mayor_1min": 0.0
+      },
+      "temperatura": {
+        "n": 16.0,
+        "promedio": 5.6897635625,
+        "p50": 3.6185134999999997,
+        "p95": 11.082968000000001,
+        "maximo": 21.350642,
+        "frac_mayor_1min": 0.0
+      }
+    },
+    "parquetGold": {
+      "humedad": {
+        "filas": 1392,
+        "min": 6.0,
+        "max": 37.9,
+        "particiones": [
+          "anio_mes=2026-09",
+          "anio_mes=2026-10",
+          "anio_mes=2026-11"
+        ]
+      },
+      "temperatura": {
+        "filas": 2880,
+        "min": -5.4,
+        "max": 23.4,
+        "particiones": [
+          "anio_mes=2026-07",
+          "anio_mes=2026-08",
+          "anio_mes=2026-09",
+          "anio_mes=2026-10",
+          "anio_mes=2026-11"
+        ]
+      }
+    }
+  },
+  "streaming": {
+    "ventanaS": 150,
+    "filasNuevas": {
+      "hum": 2,
+      "temp": 2,
+      "pred_hum": 6,
+      "pred_temp": 2
+    },
+    "errorPrediccion1h": {
+      "humedad": {
+        "n": 438.0,
+        "mae_modelo": 0.10691187025798805,
+        "mae_persistencia": 0.07157534246575349
+      },
+      "temperatura": {
+        "n": 439.0,
+        "mae_modelo": 1.0781659111774977,
+        "mae_persistencia": 1.388701594533029
+      }
+    }
+  },
+  "observabilidad": {
+    "metricasPublicadas": {
+      "agrosmart_ejec_latencia_p50_humedad_s": 3.6703265,
+      "agrosmart_ejec_latencia_p95_humedad_s": 14.018002,
+      "agrosmart_ejec_latencia_p50_temperatura_s": 3.6185134999999997,
+      "agrosmart_ejec_latencia_p95_temperatura_s": 11.082968000000001,
+      "agrosmart_ejec_eventos_nuevos_humedad": 2.0,
+      "agrosmart_ejec_eventos_nuevos_temperatura": 2.0,
+      "agrosmart_ejec_error_1h_humedad": 0.10691187025798805,
+      "agrosmart_ejec_error_1h_temperatura": 1.0781659111774977,
+      "agrosmart_ejec_ultima_timestamp": 1795152628.0
+    },
+    "confirmadasEnPrometheus": true
+  },
+  "advertencias": [
+    "[humedad] en producción el modelo NO supera a la persistencia (MAE 0.107 ≥ 0.072)"
+  ],
+  "estado": "ADVERTENCIA",
+  "duracionTotalS": 185.8,
+  "huellasConfiguracion": {
+    "kafka/compose.yml": "d167599e07e65d10",
+    "pyspark/compose.yml": "8580ca2e3c3d5ca3",
+    "pyspark/compose.kafka.yml": "2e576aaf9a371fe2",
+    "obs/compose.yml": "e101fc4ece3ef6e6",
+    "uso-agrosmart/compose.yml": "0c729b82f861f9eb",
+    "obs/prometheus/prometheus.yml": "8bdc84a7355caebd",
+    "obs/prometheus/alerts.yml": "f9f5ca2da5dba377",
+    "obs/grafana/dashboards/agrosmart_u2.json": "1808c2121561c29a",
+    "pyspark/sql/schema.sql": "a6e6d7adbc1832fd",
+    "pyspark/sql/schema_temperatura.sql": "167cb7c12bc270f6",
+    "pyspark/sql/schema_integracion.sql": "90ec8e65197372c8"
+  },
+  "versiones": {
+    "spark": "3.5.0",
+    "psycopg2": "2.9.10 (dt dec pq3 ext lo64)",
+    "pandas": "2.0.3"
+  }
+}

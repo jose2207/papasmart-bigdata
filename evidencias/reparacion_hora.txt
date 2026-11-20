@@ -1,0 +1,41 @@
+DO
+SET
+--- Desfase ANTES (segundos entre emisión y fecha del evento, flujo cada 2 min) ---
+  dimension  | eventos | desfase_mediano_s 
+-------------+---------+-------------------
+ humedad     |    1260 |             18001
+ temperatura |    1260 |             18001
+(2 rows)
+
+BEGIN
+NOTICE:  humedad · lecturas corregidas: 1346
+NOTICE:  humedad · predicciones recalculadas: 4038
+NOTICE:  humedad · eventos empresariales y ventanas corregidos
+NOTICE:  temperatura · lecturas corregidas: 1262
+NOTICE:  temperatura · predicciones recalculadas: 1262
+NOTICE:  temperatura · evaluaciones y ventanas corregidas
+DO
+COMMIT
+--- DESPUÉS: últimos eventos y sus predicciones (hora de Perú) ---
+   evento    | h |  objetivo   | pred_pct | es_retro 
+-------------+---+-------------+----------+----------
+ 19/11 20:36 | 1 | 19/11 21:36 |    15.20 | f
+ 19/11 20:36 | 2 | 19/11 22:36 |    15.11 | f
+ 19/11 20:36 | 3 | 19/11 23:36 |    15.03 | f
+ 19/11 20:34 | 1 | 19/11 21:34 |    15.20 | f
+ 19/11 20:34 | 2 | 19/11 22:34 |    15.11 | f
+ 19/11 20:34 | 3 | 19/11 23:34 |    15.03 | f
+(6 rows)
+
+   evento    | h |  objetivo   | pred_c | es_retro 
+-------------+---+-------------+--------+----------
+ 19/11 20:34 | 1 | 19/11 21:34 |  10.41 | f
+ 19/11 20:32 | 1 | 19/11 21:32 |  10.41 | f
+ 19/11 20:30 | 1 | 19/11 21:30 |  10.41 | f
+(3 rows)
+
+       hora_actual_peru        
+-------------------------------
+ 2026-11-19 20:36:18.947657-05
+(1 row)
+

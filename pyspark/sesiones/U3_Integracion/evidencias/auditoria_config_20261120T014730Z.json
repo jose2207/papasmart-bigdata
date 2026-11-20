@@ -1,0 +1,47 @@
+[
+  {
+    "punto":"Versión de las imágenes",
+    "resultado":"Cumple",
+    "detalle":"Todas las imágenes tienen versión exacta."
+  },
+  {
+    "punto":"Reinicio (restart)",
+    "resultado":"Cumple",
+    "detalle":"Los servicios permanentes declaran restart."
+  },
+  {
+    "punto":"Salud (healthcheck)",
+    "resultado":"Cumple",
+    "detalle":"Healthcheck en 9 servicios permanentes."
+  },
+  {
+    "punto":"Salud · riesgo aceptado: kafka-ui",
+    "resultado":"Aceptado",
+    "detalle":"Interfaz de apoyo; la imagen no garantiza utilidades de shell. Si cae, no afecta al flujo de datos."
+  },
+  {
+    "punto":"Salud · riesgo aceptado: kafka-exporter",
+    "resultado":"Aceptado",
+    "detalle":"Imagen mínima sin shell; su estado se observa desde Prometheus (target kafka_exporter UP\/DOWN)."
+  },
+  {
+    "punto":"Orden de arranque (depends_on)",
+    "resultado":"Cumple",
+    "detalle":"Toda dependencia con healthcheck espera a service_healthy."
+  },
+  {
+    "punto":"Secretos fuera del archivo",
+    "resultado":"Cumple",
+    "detalle":"Credenciales por ${VARIABLE}; .env en .gitignore."
+  },
+  {
+    "punto":"Superficie expuesta (ports)",
+    "resultado":"Cumple",
+    "detalle":"11 puertos publicados, todos en 127.0.0.1 (solo el equipo local)."
+  },
+  {
+    "punto":"Variables documentadas en .env.example",
+    "resultado":"Cumple",
+    "detalle":"6 variables obligatorias, todas en .env.example."
+  }
+]

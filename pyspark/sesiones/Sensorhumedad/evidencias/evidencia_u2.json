@@ -1,0 +1,104 @@
+{
+  "generado_utc": "2026-11-17T05:57:23.228641+00:00",
+  "conteos": {
+    "telemetria": 2273,
+    "simulado_carga_inicial": 2160,
+    "api_open_meteo": 84,
+    "empresariales": 113,
+    "predicciones": 339,
+    "ventanas": 86
+  },
+  "modelos_elegidos": [
+    {
+      "horizonte_h": 1,
+      "modelo": "RegresionLineal",
+      "rmse": 1.21223,
+      "mae": 0.65682,
+      "r2": 0.96931,
+      "baseline_rmse": 1.14964,
+      "n_train": 2522,
+      "n_validacion": 540,
+      "n_prueba": 541
+    },
+    {
+      "horizonte_h": 2,
+      "modelo": "RegresionLineal",
+      "rmse": 1.82974,
+      "mae": 1.17307,
+      "r2": 0.93007,
+      "baseline_rmse": 1.68886,
+      "n_train": 2520,
+      "n_validacion": 539,
+      "n_prueba": 541
+    },
+    {
+      "horizonte_h": 3,
+      "modelo": "RegresionLineal",
+      "rmse": 2.345,
+      "mae": 1.60522,
+      "r2": 0.88514,
+      "baseline_rmse": 2.10838,
+      "n_train": 2519,
+      "n_validacion": 537,
+      "n_prueba": 541
+    }
+  ],
+  "offsets_kafka": {
+    "agrosmart-u2-humedad-telemetria": {
+      "agrosmart-u2-humedad-telemetria[0]": [
+        0,
+        29
+      ]
+    },
+    "agrosmart-u2-humedad-empresarial": {
+      "agrosmart-u2-humedad-empresarial[0]": [
+        0,
+        29
+      ]
+    }
+  },
+  "consultas_spark": [
+    {
+      "consulta": "empresarial",
+      "activa": true,
+      "batch_id": 11,
+      "observado_utc": "2026-11-17 05:57:33.519055+00",
+      "error": null
+    },
+    {
+      "consulta": "telemetria",
+      "activa": true,
+      "batch_id": 11,
+      "observado_utc": "2026-11-17 05:57:33.519055+00",
+      "error": null
+    },
+    {
+      "consulta": "temp_empresarial",
+      "activa": true,
+      "batch_id": 10,
+      "observado_utc": "2026-11-17 05:57:28.505451+00",
+      "error": null
+    },
+    {
+      "consulta": "temp_telemetria",
+      "activa": true,
+      "batch_id": 10,
+      "observado_utc": "2026-11-17 05:57:28.505451+00",
+      "error": null
+    },
+    {
+      "consulta": "temp_ventanas",
+      "activa": true,
+      "batch_id": 10,
+      "observado_utc": "2026-11-17 05:57:28.505451+00",
+      "error": null
+    },
+    {
+      "consulta": "ventanas",
+      "activa": true,
+      "batch_id": 11,
+      "observado_utc": "2026-11-17 05:57:33.519055+00",
+      "error": null
+    }
+  ]
+}

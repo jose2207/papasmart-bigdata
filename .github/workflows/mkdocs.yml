@@ -1,0 +1,22 @@
+name: Publicar documentación MkDocs
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install mkdocs==1.6.1 mkdocs-material==9.6.5
+      - run: |
+          git config user.name "jose2207"
+          git config user.email "jose2207@users.noreply.github.com"
+          mkdocs gh-deploy --force --clean --strict

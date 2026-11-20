@@ -1,0 +1,63 @@
+services:
+  jupyter:
+    networks:
+      agrosmart-jose-data-net: {}
+      agrosmart-jose-kafka-net: {}
+  spark-consumer:
+    profiles: [streaming]
+    container_name: spark-consumer-humedad   # en los logs: spark-consumer-humedad (sin -1)
+    build: {context: ., dockerfile: Dockerfile}
+    command: ["bash", "/opt/agrosmart-scripts/start_consumer.sh"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      KAFKA_BOOTSTRAP: kafka:9092
+      AGRO_ROOT: /home/jovyan/work/Sensorhumedad
+      TZ: America/Lima
+    volumes:
+      - ./sesiones:/home/jovyan/work
+      - ./scripts:/opt/agrosmart-scripts:ro
+      - ./sql/schema.sql:/opt/agrosmart-sql/schema.sql:ro
+    healthcheck:
+      test: ["CMD", "python", "/opt/agrosmart-scripts/healthcheck_consumer.py", "telemetria"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 240s
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [agrosmart-jose-data-net,agrosmart-jose-kafka-net]
+  spark-consumer-temperatura:
+    profiles: [streaming-temperatura]
+    container_name: spark-consumer-temperatura   # en los logs: spark-consumer-temperatura (sin -1)
+    build: {context: ., dockerfile: Dockerfile}
+    command: ["bash", "/opt/agrosmart-scripts/start_consumer_temperatura.sh"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      KAFKA_BOOTSTRAP: kafka:9092
+      AGRO_ROOT: /home/jovyan/work/Sensortemperatura
+      TZ: America/Lima
+    volumes:
+      - ./sesiones:/home/jovyan/work
+      - ./scripts:/opt/agrosmart-scripts:ro
+      - ./sql:/opt/agrosmart-sql:ro
+    healthcheck:
+      test: ["CMD", "python", "/opt/agrosmart-scripts/healthcheck_consumer.py", "temp_telemetria"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 240s
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [agrosmart-jose-data-net,agrosmart-jose-kafka-net]
+networks:
+  agrosmart-jose-kafka-net:
+    external: true
+    name: agrosmart-jose-kafka-net

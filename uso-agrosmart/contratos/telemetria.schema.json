@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evento humedad Open-Meteo modelado (S7)",
+  "type": "object",
+  "required": ["evento_id","fecha_evento","ubicacion","humedad_suelo_m3m3","humedad_suelo_pct","humedad_aire_pct","origen","modo_publicacion","emitido_utc"],
+  "properties": {
+    "evento_id": {"type":"string", "minLength":16},
+    "fecha_evento": {"type":"string", "format":"date-time"},
+    "ubicacion": {"type":"string"},
+    "humedad_suelo_m3m3": {"type":"number", "minimum":0, "maximum":1},
+    "humedad_suelo_pct": {"type":"number", "minimum":0, "maximum":100},
+    "humedad_aire_pct": {"type":"number", "minimum":0, "maximum":100},
+    "origen": {"enum":["open_meteo_modelado","open_meteo_interpolado_2min","simulado_carga_inicial"]},
+    "profundidad_suelo_cm": {"const":"0-1"},
+    "modo_publicacion": {"enum":["replay_historico", "consulta_periodica"]},
+    "emitido_utc": {"type":"string", "format":"date-time"}
+  }
+}

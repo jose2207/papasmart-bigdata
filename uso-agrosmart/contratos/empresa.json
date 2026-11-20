@@ -1,0 +1,9 @@
+{
+  "evento_id": "uuid-de-ejemplo",
+  "fecha_evento": "2026-11-05T15:00:00+00:00",
+  "lote_id": "PUNO-DEMO-01",
+  "tipo": "orden_riego",
+  "volumen_litros": 40.0,
+  "estado": "programado",
+  "origen": "empresarial_simulado"
+}

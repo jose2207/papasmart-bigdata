@@ -1,0 +1,19 @@
+===== HISTORICO BIG DATA vie 20/11/2026  0:08:40.68 ===== 
+ Container agrosmart-jose-pyspark-jupyter-1 Running 
+ Container agrosmart-jose-pyspark-postgres-1 Running 
+ Container agrosmart-jose-pyspark-postgres-1 Waiting 
+ Container agrosmart-jose-pyspark-postgres-1 Healthy 
+[NbConvertApp] Converting notebook /home/jovyan/work/Historico_BigData/U3_BigData_Historico_OpenMeteo.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/20 00:08:50 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+
+^C

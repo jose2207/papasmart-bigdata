@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+rule_files:
+  - /etc/prometheus/alerts.yml
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["prometheus:9090"]
+  - job_name: agrosmart_exporter
+    static_configs:
+      - targets: ["exporter:9200"]
+  - job_name: kafka_exporter
+    static_configs:
+      - targets: ["kafka-exporter:9308"]
+  - job_name: pushgateway
+    honor_labels: true
+    static_configs:
+      - targets: ["pushgateway:9091"]

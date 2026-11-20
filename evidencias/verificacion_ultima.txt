@@ -1,0 +1,357 @@
+===== VERIFICACION AGROSMART PUNO =====
+Fecha y hora del equipo: vie 20/11/2026 11:29:48.28
+
+===== 1. CONTENEDORES (docker ps) =====
+NAMES                                                    STATUS                   PORTS
+producer-humedad                                         Up 7 minutes             
+producer-temperatura                                     Up 7 minutes             
+agrosmart-jose-obs-grafana-1                             Up 7 minutes (healthy)   127.0.0.1:3300->3000/tcp
+spark-consumer-humedad                                   Up 7 minutes (healthy)   4040/tcp, 8888/tcp
+spark-consumer-temperatura                               Up 7 minutes (healthy)   4040/tcp, 8888/tcp
+agrosmart-jose-pyspark-postgres-1                        Up 7 minutes (healthy)   127.0.0.1:15432->5432/tcp
+agrosmart-jose-obs-exporter-1                            Up 7 minutes (healthy)   127.0.0.1:9202->9200/tcp
+agrosmart-jose-pyspark-jupyter-1                         Up 7 minutes (healthy)   127.0.0.1:4041->4040/tcp, 127.0.0.1:8008->8000/tcp, 127.0.0.1:4489->8888/tcp
+agrosmart-jose-uso-producer-evaluaciones-temperatura-1   Up 7 minutes             
+agrosmart-jose-uso-producer-evaluaciones-1               Up 7 minutes             
+agrosmart-jose-obs-prometheus-1                          Up 7 minutes (healthy)   127.0.0.1:9095->9090/tcp
+agrosmart-jose-obs-pushgateway-1                         Up 7 minutes (healthy)   127.0.0.1:9096->9091/tcp
+agrosmart-jose-kafka-kafka-ui-1                          Up 7 minutes             127.0.0.1:48086->8080/tcp
+agrosmart-jose-kafka-kafka-exporter-1                    Up 7 minutes             127.0.0.1:49309->9308/tcp
+agrosmart-jose-kafka-kafka-1                             Up 8 minutes (healthy)   127.0.0.1:49093->49093/tcp
+
+===== 2. POSTGRESQL =====
+SET
+=== Zona horaria y hora actual de la base ===
+   TimeZone   
+--------------
+ America/Lima
+(1 row)
+
+      hora_peru      
+---------------------
+ 20/11/2026 11:29:49
+(1 row)
+
+=== Conteo por tabla ===
+               tabla               | count 
+-----------------------------------+-------
+ eventos_telemetria                |  5927
+ eventos_empresariales             |  1613
+ predicciones_humedad              |  4839
+ ventanas_humedad                  |   144
+ eventos_temperatura               |  5827
+ eventos_empresariales_temperatura |  1530
+ predicciones_temperatura          |  1530
+ ventanas_temperatura              |    61
+ ejecuciones_integracion           |     5
+(9 rows)
+
+=== Lecturas por origen (humedad) ===
+           origen            | lecturas |   primera   |   ultima    
+-----------------------------+----------+-------------+-------------
+ simulado_carga_inicial      |     4314 | 19/06 19:00 | 20/09 18:00
+ open_meteo_interpolado_2min |     1527 | 16/11 16:10 | 20/11 11:28
+ open_meteo_modelado         |       86 | 02/11 22:00 | 18/11 21:00
+(3 rows)
+
+=== Lecturas por origen (temperatura) ===
+           origen            | lecturas |   primera   |   ultima    
+-----------------------------+----------+-------------+-------------
+ simulado_carga_inicial      |     4297 | 19/06 19:00 | 20/09 18:00
+ open_meteo_interpolado_2min |     1528 | 16/11 16:10 | 20/11 11:28
+ open_meteo_modelado         |        2 | 18/11 20:00 | 18/11 21:00
+(3 rows)
+
+=== Desfase emision - evento en el flujo de 2 min (debe ser de segundos) ===
+     dim     | mediana_s 
+-------------+-----------
+ humedad     |         1
+ temperatura |         1
+(2 rows)
+
+=== Ultimas lecturas y sus predicciones (humedad, hora de Peru) ===
+   evento    | suelo_pct | h |  objetivo   | pred_pct | es_retro |        modelo         
+-------------+-----------+---+-------------+----------+----------+-----------------------
+ 20/11 11:28 |    14.553 | 1 | 20/11 12:28 |   14.544 | f        | LinearRegressionModel
+ 20/11 11:28 |    14.553 | 2 | 20/11 13:28 |   14.542 | f        | LinearRegressionModel
+ 20/11 11:28 |    14.553 | 3 | 20/11 14:28 |   14.513 | f        | LinearRegressionModel
+ 20/11 11:26 |    14.557 | 1 | 20/11 12:26 |   14.547 | f        | LinearRegressionModel
+ 20/11 11:26 |    14.557 | 2 | 20/11 13:26 |   14.546 | f        | LinearRegressionModel
+ 20/11 11:26 |    14.557 | 3 | 20/11 14:26 |   14.516 | f        | LinearRegressionModel
+ 20/11 11:24 |    14.560 | 1 | 20/11 12:24 |   14.550 | f        | LinearRegressionModel
+ 20/11 11:24 |    14.560 | 2 | 20/11 13:24 |   14.549 | f        | LinearRegressionModel
+ 20/11 11:24 |    14.560 | 3 | 20/11 14:24 |   14.519 | f        | LinearRegressionModel
+(9 rows)
+
+=== Ultimas lecturas y sus predicciones (temperatura, hora de Peru) ===
+   evento    | temp_c | h |  objetivo   | pred_c | es_retro |           modelo            
+-------------+--------+---+-------------+--------+----------+-----------------------------
+ 20/11 11:28 |  19.51 | 1 | 20/11 12:28 |  20.35 | f        | DecisionTreeRegressionModel
+ 20/11 11:26 |  19.48 | 1 | 20/11 12:26 |  20.35 | f        | DecisionTreeRegressionModel
+ 20/11 11:24 |  19.44 | 1 | 20/11 12:24 |  20.35 | f        | DecisionTreeRegressionModel
+ 20/11 11:22 |  19.40 | 1 | 20/11 12:22 |  20.35 | f        | DecisionTreeRegressionModel
+ 20/11 05:22 |   5.85 | 1 | 20/11 06:22 |   4.21 | f        | DecisionTreeRegressionModel
+(5 rows)
+
+=== Error en produccion: prediccion +1 h vs lectura real (ultimas 24 h) ===
+   dim   | h |  n  | rmse_modelo | rmse_persistencia 
+---------+---+-----+-------------+-------------------
+ humedad | 1 | 296 |      0.1405 |            0.1128
+ humedad | 2 | 236 |      0.2438 |            0.1411
+ humedad | 3 | 199 |      0.3502 |            0.1599
+(3 rows)
+
+     dim     | h |  n  | rmse_modelo | rmse_persistencia 
+-------------+---+-----+-------------+-------------------
+ temperatura | 1 | 297 |      0.6616 |            0.9381
+(1 row)
+
+=== Consultas Spark (heartbeat) ===
+     consulta     | activa | batch_id | filas_entrada | duracion_ms |   observado    | error 
+------------------+--------+----------+---------------+-------------+----------------+-------
+ empresarial      | t      |     1533 |             0 |          16 | 20/11 11:29:43 | 
+ telemetria       | t      |     1532 |             0 |          22 | 20/11 11:29:43 | 
+ temp_empresarial | t      |     1545 |             0 |          16 | 20/11 11:29:47 | 
+ temp_telemetria  | t      |     1545 |             0 |          11 | 20/11 11:29:47 | 
+ temp_ventanas    | t      |     1545 |             0 |           9 | 20/11 11:29:47 | 
+ ventanas         | t      |     1532 |             0 |          16 | 20/11 11:29:43 | 
+(6 rows)
+
+=== Ventanas de 1 h mas recientes ===
+   inicio    |  fin  | lecturas | suelo_media 
+-------------+-------+----------+-------------
+ 20/11 11:00 | 12:00 |        4 |      14.558
+ 20/11 05:00 | 06:00 |       12 |      15.500
+ 20/11 04:00 | 05:00 |       30 |      15.500
+(3 rows)
+
+   inicio    |  fin  | lecturas | media | minima | maxima 
+-------------+-------+----------+-------+--------+--------
+ 20/11 11:00 | 12:00 |        4 | 19.46 |  19.40 |  19.51
+ 20/11 05:00 | 06:00 |       12 |  5.38 |   4.90 |   5.85
+ 20/11 04:00 | 05:00 |       30 |  5.06 |   4.91 |   5.20
+(3 rows)
+
+=== Evaluaciones empresariales por estado ===
+     dim     |     estado      | count 
+-------------+-----------------+-------
+ humedad     | revision_manual |   811
+ humedad     | seguimiento     |   802
+ temperatura | normal          |  1530
+(3 rows)
+
+=== Modelos registrados ===
+     dim     | horizonte_h |     modelo      |  rmse  | persistencia 
+-------------+-------------+-----------------+--------+--------------
+ humedad     |           1 | RegresionLineal | 1.1737 |       1.1049
+ humedad     |           2 | RegresionLineal | 1.7925 |       1.6400
+ humedad     |           3 | RegresionLineal | 2.3068 |       2.0539
+ temperatura |           1 | ArbolDecision   | 1.1405 |       1.6307
+(4 rows)
+
+=== Ejecuciones integradas (DataOps) ===
+    fecha    |         run_id         |   estado    | compuertas 
+-------------+------------------------+-------------+------------
+ 20/11 01:05 | 20261120T060237Z       | ADVERTENCIA | 24/24
+ 20/11 00:30 | 20261120T052733Z       | ADVERTENCIA | 24/24
+ 19/11 20:50 | 20261120T014730Z       | ADVERTENCIA | 24/24
+ 17/11 01:17 | 20261117T061131Z       | ADVERTENCIA | 24/24
+ 17/11 01:11 | 20261117T061131Z-FALLA | FALLA       | 18/20
+(5 rows)
+
+=== Tamano de la base ===
+ tamano_bd 
+-----------
+ 16 MB
+(1 row)
+
+
+===== 3. KAFKA: TOPICOS Y OFFSETS =====
+__consumer_offsets
+agrosmart-u2-humedad-empresarial
+agrosmart-u2-humedad-telemetria
+agrosmart-u2-temperatura-empresarial
+agrosmart-u2-temperatura-telemetria
+agrosmart-u2-humedad-telemetria:0:1599
+agrosmart-u2-humedad-empresarial:0:1600
+agrosmart-u2-temperatura-telemetria:0:1601
+agrosmart-u2-temperatura-empresarial:0:1601
+
+===== 4. KAFKA: ULTIMOS MENSAJES (consumer de verificacion) =====
+ Image agrosmart-jose-uso-consumer-verificacion Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 653B 0.1s done
+#1 DONE 0.1s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 202B 0.0s done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/python:3.11-slim
+#3 DONE 2.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.79kB 0.0s done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535
+#6 resolve docker.io/library/python:3.11-slim@sha256:07d4824036af339fa1b6ef769cc99d9c10a141769538b52b3b597c84f7a7b535 0.1s done
+#6 DONE 0.1s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] RUN pip install --no-cache-dir kafka-python==2.0.2 requests==2.32.3
+#8 CACHED
+
+#9 [4/5] COPY producer/ /app/producer/
+#9 CACHED
+
+#10 [5/5] COPY consumer/ /app/consumer/
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:af75789247d0205bc31786919ee80a6657823467b58b97471d753f9e6d402119 0.0s done
+#11 exporting config sha256:c2896f2530889ae3755445f3e42a4738491a09a3ce2377b929cd868fdab4efd5 0.0s done
+#11 exporting attestation manifest sha256:fce7dfdfaf27307358f0e3e46d983c8cb6157685b898a91aa961d13b2d1d88c9 0.0s done
+#11 exporting manifest list sha256:520b869d6dd4a2c992a3b7d9bd6180ac55bb10a5e153e1ff8ab97a1ec2a3ced8
+#11 exporting manifest list sha256:520b869d6dd4a2c992a3b7d9bd6180ac55bb10a5e153e1ff8ab97a1ec2a3ced8 0.0s done
+#11 naming to docker.io/library/agrosmart-jose-uso-consumer-verificacion:latest done
+#11 unpacking to docker.io/library/agrosmart-jose-uso-consumer-verificacion:latest 0.0s done
+#11 DONE 0.2s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image agrosmart-jose-uso-consumer-verificacion Built 
+ Container agrosmart-jose-uso-consumer-verificacion-run-9d977c8fa52b Creating 
+ Container agrosmart-jose-uso-consumer-verificacion-run-9d977c8fa52b Created 
+== agrosmart-u2-humedad-telemetria · últimos 5 mensajes · offset final actual: p0=1600 ==
+[offset   1595 · p0] 20/11/2026 11:22 | HUMEDAD DEL SUELO 0-1 cm = 14.5633 %   (aire 2 m, complementario: 35.6 %) | Puno | origen=open_meteo_interpolado_2min
+[offset   1596 · p0] 20/11/2026 11:24 | HUMEDAD DEL SUELO 0-1 cm = 14.56 %   (aire 2 m, complementario: 35.6 %) | Puno | origen=open_meteo_interpolado_2min
+[offset   1597 · p0] 20/11/2026 11:26 | HUMEDAD DEL SUELO 0-1 cm = 14.5567 %   (aire 2 m, complementario: 35.6 %) | Puno | origen=open_meteo_interpolado_2min
+[offset   1598 · p0] 20/11/2026 11:28 | HUMEDAD DEL SUELO 0-1 cm = 14.5533 %   (aire 2 m, complementario: 35.5 %) | Puno | origen=open_meteo_interpolado_2min
+[offset   1599 · p0] 20/11/2026 11:30 | HUMEDAD DEL SUELO 0-1 cm = 14.55 %   (aire 2 m, complementario: 35.5 %) | Puno | origen=open_meteo_interpolado_2min
+ Container agrosmart-jose-uso-consumer-verificacion-temp-run-f01c8206f1c7 Creating 
+ Container agrosmart-jose-uso-consumer-verificacion-temp-run-f01c8206f1c7 Created 
+== agrosmart-u2-temperatura-telemetria · últimos 5 mensajes · offset final actual: p0=1601 ==
+[offset   1596 · p0] 20/11/2026 11:22 | TEMPERATURA 2 m = 19.403 °C | Azángaro | origen=open_meteo_interpolado_2min
+[offset   1597 · p0] 20/11/2026 11:24 | TEMPERATURA 2 m = 19.44 °C | Azángaro | origen=open_meteo_interpolado_2min
+[offset   1598 · p0] 20/11/2026 11:26 | TEMPERATURA 2 m = 19.477 °C | Azángaro | origen=open_meteo_interpolado_2min
+[offset   1599 · p0] 20/11/2026 11:28 | TEMPERATURA 2 m = 19.513 °C | Azángaro | origen=open_meteo_interpolado_2min
+[offset   1600 · p0] 20/11/2026 11:30 | TEMPERATURA 2 m = 19.55 °C | Azángaro | origen=open_meteo_interpolado_2min
+
+===== 5. PROMETHEUS: TARGETS Y ALERTAS =====
+{"status":"success","data":{"activeTargets":[{"discoveredLabels":{"__address__":"exporter:9200","__metrics_path__":"/metrics","__scheme__":"http","__scrape_interval__":"15s","__scrape_timeout__":"10s","job":"agrosmart_exporter"},"labels":{"instance":"exporter:9200","job":"agrosmart_exporter"},"scrapePool":"agrosmart_exporter","scrapeUrl":"http://exporter:9200/metrics","globalUrl":"http://exporter:9200/metrics","lastError":"","lastScrape":"2026-11-20T16:30:29.430858213Z","lastScrapeDuration":0.006368996,"health":"up","scrapeInterval":"15s","scrapeTimeout":"10s"},{"discoveredLabels":{"__address__":"kafka-exporter:9308","__metrics_path__":"/metrics","__scheme__":"http","__scrape_interval__":"15s","__scrape_timeout__":"10s","job":"kafka_exporter"},"labels":{"instance":"kafka-exporter:9308","job":"kafka_exporter"},"scrapePool":"kafka_exporter","scrapeUrl":"http://kafka-exporter:9308/metrics","globalUrl":"http://kafka-exporter:9308/metrics","lastError":"","lastScrape":"2026-11-20T16:30:22.729576912Z","lastScrapeDuration":0.267840878,"health":"up","scrapeInterval":"15s","scrapeTimeout":"10s"},{"discoveredLabels":{"__address__":"prometheus:9090","__metrics_path__":"/metrics","__scheme__":"http","__scrape_interval__":"15s","__scrape_timeout__":"10s","job":"prometheus"},"labels":{"instance":"prometheus:9090","job":"prometheus"},"scrapePool":"prometheus","scrapeUrl":"http://prometheus:9090/metrics","globalUrl":"http://prometheus:9090/metrics","lastError":"","lastScrape":"2026-11-20T16:30:15.418559891Z","lastScrapeDuration":0.020763153,"health":"up","scrapeInterval":"15s","scrapeTimeout":"10s"},{"discoveredLabels":{"__address__":"pushgateway:9091","__metrics_path__":"/metrics","__scheme__":"http","__scrape_interval__":"15s","__scrape_timeout__":"10s","job":"pushgateway"},"labels":{"instance":"pushgateway:9091","job":"pushgateway"},"scrapePool":"pushgateway","scrapeUrl":"http://pushgateway:9091/metrics","globalUrl":"http://pushgateway:9091/metrics","lastError":"","lastScrape":"2026-11-20T16:30:27.166961535Z","lastScrapeDuration":0.018954396,"health":"up","scrapeInterval":"15s","scrapeTimeout":"10s"}],"droppedTargets":[],"droppedTargetCounts":null}}
+{"status":"success","data":{"alerts":[]}}
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"telemetria","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]},{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"empresarial","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]},{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"ventanas","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]},{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"temp_telemetria","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]},{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"temp_empresarial","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]},{"metric":{"__name__":"agrosmart_consulta_activa","consulta":"temp_ventanas","instance":"exporter:9200","job":"agrosmart_exporter"},"value":[1795192230.238,"1"]}]}}
+Grafana /api/health HTTP 200
+
+===== 6. LOGS RECIENTES DE LOS CONSUMIDORES SPARK =====
+spark-consumer-temperatura  | 2026-11-20 11:26:13,170 INFO S8 temp_ventanas batch=1541 filas=1
+spark-consumer-humedad      | 26/11/20 11:26:13 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 8467 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:26:13,698 INFO S8/S10 temp_telemetria batch=1541 filas=1 predicciones=1 duracion_s=6.62
+spark-consumer-temperatura  | 26/11/20 11:26:14 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 9139 milliseconds
+spark-consumer-temperatura  | 26/11/20 11:26:14 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 9482 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:26:15,029 INFO S6 temp_empresarial batch=1542 filas=0
+spark-consumer-temperatura  | 2026-11-20 11:26:18,388 INFO S8 temp_ventanas batch=1542 filas=0
+spark-consumer-humedad      | 26/11/20 11:26:13 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 8828 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:26:18,472 INFO S8/S10 temp_telemetria batch=1542 filas=0 predicciones=0 duracion_s=2.00
+spark-consumer-temperatura  | 2026-11-20 11:28:09,229 INFO S8 temp_ventanas batch=1543 filas=1
+spark-consumer-temperatura  | 2026-11-20 11:28:10,276 INFO S6 temp_empresarial batch=1543 filas=1
+spark-consumer-temperatura  | 2026-11-20 11:28:10,398 INFO S8/S10 temp_telemetria batch=1543 filas=1 predicciones=1 duracion_s=4.01
+spark-consumer-temperatura  | 26/11/20 11:28:11 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 6244 milliseconds
+spark-consumer-temperatura  | 26/11/20 11:28:11 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 6430 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:28:13,348 INFO S8 temp_ventanas batch=1544 filas=0
+spark-consumer-temperatura  | 2026-11-20 11:28:15,030 INFO S6 temp_empresarial batch=1544 filas=0
+spark-consumer-temperatura  | 2026-11-20 11:28:15,282 INFO S8/S10 temp_telemetria batch=1544 filas=0 predicciones=0 duracion_s=2.25
+spark-consumer-temperatura  | 2026-11-20 11:30:10,514 INFO S8/S10 temp_telemetria batch=1545 filas=1 predicciones=1 duracion_s=4.19
+spark-consumer-temperatura  | 26/11/20 11:30:11 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 6107 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:30:11,160 INFO S6 temp_empresarial batch=1545 filas=1
+spark-consumer-temperatura  | 2026-11-20 11:30:12,182 INFO S8 temp_ventanas batch=1545 filas=1
+spark-consumer-temperatura  | 26/11/20 11:30:12 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 7258 milliseconds
+spark-consumer-humedad      | 26/11/20 11:26:14 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 9046 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:26:17,160 INFO S8/S10 telemetria batch=1529 filas=0 predicciones=0 duracion_s=2.49
+spark-consumer-humedad      | 2026-11-20 11:26:18,035 INFO S6 negocio batch=1530 filas=0
+spark-consumer-humedad      | 2026-11-20 11:26:18,382 INFO S8 ventanas batch=1529 filas=0
+spark-consumer-temperatura  | 26/11/20 11:30:13 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 8274 milliseconds
+spark-consumer-humedad      | 26/11/20 11:26:18 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 5016 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:28:09,915 INFO S6 negocio batch=1531 filas=1
+spark-consumer-humedad      | 2026-11-20 11:28:10,373 INFO S8 ventanas batch=1530 filas=1
+spark-consumer-humedad      | 26/11/20 11:28:10 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 5621 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:30:13,990 INFO S8/S10 temp_telemetria batch=1546 filas=0 predicciones=0 duracion_s=1.90
+spark-consumer-humedad      | 26/11/20 11:28:11 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 6311 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:28:11,768 INFO S8/S10 telemetria batch=1530 filas=1 predicciones=3 duracion_s=5.45
+spark-consumer-humedad      | 26/11/20 11:28:13 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 8002 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:28:14,699 INFO S6 negocio batch=1532 filas=0
+spark-consumer-humedad      | 2026-11-20 11:28:15,113 INFO S8/S10 telemetria batch=1531 filas=0 predicciones=0 duracion_s=1.28
+spark-consumer-temperatura  | 2026-11-20 11:30:16,816 INFO S6 temp_empresarial batch=1546 filas=0
+spark-consumer-humedad      | 2026-11-20 11:28:15,395 INFO S8 ventanas batch=1531 filas=0
+spark-consumer-temperatura  | 26/11/20 11:30:17 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 5218 milliseconds
+spark-consumer-temperatura  | 2026-11-20 11:30:17,614 INFO S8 temp_ventanas batch=1546 filas=0
+spark-consumer-humedad      | 2026-11-20 11:30:11,296 INFO S6 negocio batch=1533 filas=1
+spark-consumer-humedad      | 2026-11-20 11:30:12,251 INFO S8 ventanas batch=1532 filas=1
+spark-consumer-humedad      | 26/11/20 11:30:12 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 7520 milliseconds
+spark-consumer-humedad      | 26/11/20 11:30:13 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 8278 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:30:13,545 INFO S8/S10 telemetria batch=1532 filas=1 predicciones=3 duracion_s=6.81
+spark-consumer-humedad      | 26/11/20 11:30:14 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 5000 milliseconds, but spent 9831 milliseconds
+spark-consumer-humedad      | 2026-11-20 11:30:16,424 INFO S6 negocio batch=1534 filas=0
+spark-consumer-humedad      | 2026-11-20 11:30:16,732 INFO S8 ventanas batch=1533 filas=0
+spark-consumer-humedad      | 2026-11-20 11:30:18,177 INFO S8/S10 telemetria batch=1533 filas=0 predicciones=0 duracion_s=2.35
+
+===== 7. LOGS RECIENTES DE LOS PRODUCTORES =====
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T05:20:00-05:00 valor=15.5 offset=1593
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T05:20:00-05:00 valor=5.767 offset=1594
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T05:22:00-05:00 valor=5.853 offset=1595
+producer-temperatura  | [TEMPERATURA] topico=agrosmart-u2-temperatura-telemetria zona=Azángaro intervalo=120s
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T11:22:00-05:00 valor=19.403 offset=1596
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T11:24:00-05:00 valor=19.44 offset=1597
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T11:26:00-05:00 valor=19.477 offset=1598
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T11:28:00-05:00 valor=19.513 offset=1599
+producer-temperatura  | [TEMPERATURA] fecha=2026-11-20T11:30:00-05:00 valor=19.55 offset=1600
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T05:22:00-05:00 valor=15.5 offset=1594
+producer-humedad      | [HUMEDAD] topico=agrosmart-u2-humedad-telemetria zona=Puno intervalo=120s
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T11:22:00-05:00 valor=14.5633 offset=1595
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T11:24:00-05:00 valor=14.56 offset=1596
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T11:26:00-05:00 valor=14.5567 offset=1597
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T11:28:00-05:00 valor=14.5533 offset=1598
+producer-humedad      | [HUMEDAD] fecha=2026-11-20T11:30:00-05:00 valor=14.55 offset=1599
+
+===== 8. PRUEBAS UNITARIAS Y AUDITORIA (dentro de Jupyter) =====
+----------------------------------------------------------------------
+Ran 27 tests in 7.449s
+
+OK
+[Cumple  ] Versión de las imágenes                  Todas las imágenes tienen versión exacta.
+[Cumple  ] Reinicio (restart)                       Los servicios permanentes declaran restart.
+[Cumple  ] Salud (healthcheck)                      Healthcheck en 9 servicios permanentes.
+[Aceptado] Salud · riesgo aceptado: kafka-ui        Interfaz de apoyo; la imagen no garantiza utilidades de shell. Si cae, no afecta al flujo de datos.
+[Aceptado] Salud · riesgo aceptado: kafka-exporter  Imagen mínima sin shell; su estado se observa desde Prometheus (target kafka_exporter UP/DOWN).
+[Cumple  ] Orden de arranque (depends_on)           Toda dependencia con healthcheck espera a service_healthy.
+[Cumple  ] Secretos fuera del archivo               Credenciales por ${VARIABLE}; .env en .gitignore.
+[Cumple  ] Superficie expuesta (ports)              11 puertos publicados, todos en 127.0.0.1 (solo el equipo local).
+[Cumple  ] Variables documentadas en .env.example   6 variables obligatorias, todas en .env.example.
+
+===== 9. CONSUMO DE RECURSOS (docker stats) =====
+NAME                                                     CPU %     MEM USAGE / LIMIT
+producer-humedad                                         0.37%     24.31MiB / 7.648GiB
+producer-temperatura                                     0.37%     39.47MiB / 7.648GiB
+agrosmart-jose-obs-grafana-1                             2.05%     97.63MiB / 7.648GiB
+spark-consumer-humedad                                   10.84%    1.177GiB / 7.648GiB
+spark-consumer-temperatura                               10.82%    1.111GiB / 7.648GiB
+agrosmart-jose-pyspark-postgres-1                        0.00%     58.89MiB / 7.648GiB
+agrosmart-jose-obs-exporter-1                            8.81%     26.42MiB / 7.648GiB
+agrosmart-jose-pyspark-jupyter-1                         0.03%     351.3MiB / 7.648GiB
+agrosmart-jose-uso-producer-evaluaciones-temperatura-1   0.70%     16.69MiB / 7.648GiB
+agrosmart-jose-uso-producer-evaluaciones-1               0.97%     14.97MiB / 7.648GiB
+agrosmart-jose-obs-prometheus-1                          0.15%     39.72MiB / 7.648GiB
+agrosmart-jose-obs-pushgateway-1                         0.00%     15.93MiB / 7.648GiB
+agrosmart-jose-kafka-kafka-ui-1                          0.19%     454.3MiB / 7.648GiB
+agrosmart-jose-kafka-kafka-exporter-1                    0.09%     9.973MiB / 7.648GiB
+agrosmart-jose-kafka-kafka-1                             3.74%     607MiB / 7.648GiB
+
+===== FIN vie 20/11/2026 11:30:43.73 =====

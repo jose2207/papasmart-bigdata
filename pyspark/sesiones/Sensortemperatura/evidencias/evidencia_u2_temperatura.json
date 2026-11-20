@@ -1,0 +1,63 @@
+{
+  "generado_utc": "2026-11-20T17:28:31.130124+00:00",
+  "integrante": "Mijael Yurins Coaquira Justo",
+  "dimension": "Temperatura exterior (Azángaro) +1 h",
+  "conteos": {
+    "lecturas": 5857,
+    "simulado_carga_inicial": 4297,
+    "api_open_meteo": 2,
+    "evaluaciones": 1560,
+    "predicciones": 1560,
+    "ventanas": 62
+  },
+  "modelo": [
+    {
+      "horizonte_h": 1,
+      "modelo": "ArbolDecision",
+      "rmse": 1.18342,
+      "mae": 0.83163,
+      "r2": 0.94255,
+      "baseline_rmse": 1.64292,
+      "n_train": 2530,
+      "n_validacion": 542,
+      "n_prueba": 543
+    }
+  ],
+  "offsets_kafka": {
+    "agrosmart-u2-temperatura-telemetria": {
+      "agrosmart-u2-temperatura-telemetria[0]": [
+        0,
+        1630
+      ]
+    },
+    "agrosmart-u2-temperatura-empresarial": {
+      "agrosmart-u2-temperatura-empresarial[0]": [
+        0,
+        1630
+      ]
+    }
+  },
+  "consultas_spark": [
+    {
+      "consulta": "temp_empresarial",
+      "activa": true,
+      "batch_id": 1603,
+      "observado_utc": "2026-11-20 12:28:35.881887-05",
+      "error": null
+    },
+    {
+      "consulta": "temp_telemetria",
+      "activa": true,
+      "batch_id": 1603,
+      "observado_utc": "2026-11-20 12:28:35.881887-05",
+      "error": null
+    },
+    {
+      "consulta": "temp_ventanas",
+      "activa": true,
+      "batch_id": 1603,
+      "observado_utc": "2026-11-20 12:28:35.881887-05",
+      "error": null
+    }
+  ]
+}

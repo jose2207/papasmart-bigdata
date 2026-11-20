@@ -1,0 +1,113 @@
+{
+  "generado": "2026-11-20T00:53:51.195604-05:00",
+  "fuente": "Open-Meteo Historical Weather API (ERA5 / ERA5-Land) · archive-api.open-meteo.com",
+  "periodo": [
+    "2012-01-01",
+    "2026-11-13"
+  ],
+  "spark_nucleos": 8,
+  "calidad": [
+    {
+      "dimension": "humedad",
+      "bronze": 130320,
+      "nulos": 0,
+      "fuera_de_rango": 0,
+      "duplicados": 0,
+      "silver": 130320
+    },
+    {
+      "dimension": "temperatura",
+      "bronze": 130320,
+      "nulos": 0,
+      "fuera_de_rango": 0,
+      "duplicados": 0,
+      "silver": 130320
+    }
+  ],
+  "gold": [
+    {
+      "dimension": "humedad",
+      "filas_gold": 130320,
+      "archivos_parquet": 179,
+      "tamano_mb": 1.45,
+      "desde": "2012-01-01 00:00:00",
+      "hasta": "2026-11-12 23:00:00"
+    },
+    {
+      "dimension": "temperatura",
+      "filas_gold": 130320,
+      "archivos_parquet": 179,
+      "tamano_mb": 1.22,
+      "desde": "2012-01-01 00:00:00",
+      "hasta": "2026-11-12 23:00:00"
+    }
+  ],
+  "modelos": [
+    {
+      "dimension": "humedad",
+      "modelo": "Persistencia (último valor)",
+      "rmse_prueba": 0.6948,
+      "rmse_validacion": NaN,
+      "entrenamiento_s": NaN,
+      "mejora_vs_persistencia_%": 0.0,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    },
+    {
+      "dimension": "humedad",
+      "modelo": "Regresión lineal",
+      "rmse_prueba": 0.7187,
+      "rmse_validacion": 0.646,
+      "entrenamiento_s": 11.2,
+      "mejora_vs_persistencia_%": -3.4304,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    },
+    {
+      "dimension": "humedad",
+      "modelo": "Gradient Boosted Trees",
+      "rmse_prueba": 0.9179,
+      "rmse_validacion": 0.7384,
+      "entrenamiento_s": 26.7,
+      "mejora_vs_persistencia_%": -32.1023,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    },
+    {
+      "dimension": "temperatura",
+      "modelo": "Persistencia (último valor)",
+      "rmse_prueba": 1.6356,
+      "rmse_validacion": NaN,
+      "entrenamiento_s": NaN,
+      "mejora_vs_persistencia_%": 0.0,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    },
+    {
+      "dimension": "temperatura",
+      "modelo": "Regresión lineal",
+      "rmse_prueba": 1.0025,
+      "rmse_validacion": 1.0111,
+      "entrenamiento_s": 9.1,
+      "mejora_vs_persistencia_%": 38.7106,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    },
+    {
+      "dimension": "temperatura",
+      "modelo": "Gradient Boosted Trees",
+      "rmse_prueba": 0.8794,
+      "rmse_validacion": 0.8758,
+      "entrenamiento_s": 26.0,
+      "mejora_vs_persistencia_%": 46.235,
+      "filas_entrenamiento": 96408,
+      "filas_prueba": 16343
+    }
+  ],
+  "tiempos_s": {
+    "descarga_s": 15.0,
+    "silver_s": 16.7,
+    "gold_s": 88.0,
+    "modelos_s": 85.4
+  }
+}

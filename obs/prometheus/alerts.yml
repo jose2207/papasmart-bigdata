@@ -1,0 +1,68 @@
+groups:
+  - name: agrosmart-humedad-u2
+    rules:
+      - alert: AgroSmartExporterInaccesible
+        expr: up{job="agrosmart_exporter"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "El exportador AgroSmart no responde"
+      - alert: AgroSmartBaseSinConexion
+        expr: agrosmart_exportador_consulta_ok == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "El exportador no logra consultar las tablas PostgreSQL"
+      - alert: AgroSmartConsumerNoActivo
+        expr: agrosmart_consulta_activa{consulta="telemetria"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Consulta de Spark de humedad detenida"
+      - alert: AgroSmartHeartbeatAntiguo
+        expr: agrosmart_edad_heartbeat_segundos{consulta="telemetria"} > 120
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "No hay heartbeat reciente del Spark Consumer"
+      - alert: AgroSmartMicroloteLento
+        expr: agrosmart_duracion_lote_ms{consulta="telemetria"} > 10000
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Microlote de Spark supera 10 s"
+      - alert: AgroSmartLagAlto
+        expr: agrosmart_retraso_offsets{consulta="telemetria"} > 30
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Retraso Kafka reportado por Spark supera 30 offsets"
+  - name: agrosmart-temperatura-u2
+    rules:
+      - alert: AgroSmartTemperaturaConsumerNoActivo
+        expr: agrosmart_consulta_activa{consulta="temp_telemetria"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "La consulta Spark de temperatura (Mijael) no está activa"
+      - alert: AgroSmartTemperaturaHeartbeatAntiguo
+        expr: agrosmart_edad_heartbeat_segundos{consulta="temp_telemetria"} > 120
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Sin heartbeat reciente de la consulta de temperatura"
+
+  - name: agrosmart-dataops-u3
+    rules:
+      - alert: AgroSmartIntegracionObsoleta
+        expr: agrosmart_int_ultima_ejecucion_edad_segundos > 86400
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "La última ejecución integrada tiene más de 24 h; el tablero puede mostrar datos viejos"
+      - alert: AgroSmartIntegracionConFalla
+        expr: agrosmart_int_ultima_ejecucion_estado == 2
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: "La última ejecución integrada terminó con FALLA de compuertas"

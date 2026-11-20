@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Evaluación simulada de riesgo de helada (Mijael)",
+  "type": "object",
+  "required": [
+    "evento_id",
+    "evento_telemetria_id",
+    "fecha_evento",
+    "ubicacion",
+    "tipo",
+    "estado",
+    "temperatura_c",
+    "umbral_helada_c"
+  ],
+  "properties": {
+    "evento_id": {
+      "type": "string"
+    },
+    "evento_telemetria_id": {
+      "type": "string"
+    },
+    "fecha_evento": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ubicacion": {
+      "type": "string"
+    },
+    "tipo": {
+      "const": "evaluacion_riesgo_helada"
+    },
+    "estado": {
+      "enum": [
+        "alerta_helada",
+        "vigilancia",
+        "normal"
+      ]
+    },
+    "temperatura_c": {
+      "type": "number",
+      "minimum": -60,
+      "maximum": 60
+    },
+    "umbral_helada_c": {
+      "type": "number"
+    },
+    "origen": {
+      "type": "string"
+    },
+    "creado_utc": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}

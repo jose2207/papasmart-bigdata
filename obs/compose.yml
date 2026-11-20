@@ -1,0 +1,94 @@
+name: agrosmart-jose-obs
+services:
+  exporter:
+    build:
+      context: .
+      dockerfile: Dockerfile.exporter
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:9202:9200"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9200/metrics', timeout=5)"]
+      interval: 15s
+      timeout: 8s
+      retries: 6
+      start_period: 10s
+    networks: [agrosmart-jose-obs-net, agrosmart-jose-data-net]
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:v3.3.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    ports:
+      - "127.0.0.1:9095:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks: [agrosmart-jose-obs-net, agrosmart-jose-kafka-net]
+    depends_on:
+      exporter: {condition: service_healthy}
+    restart: unless-stopped
+  pushgateway:
+    image: prom/pushgateway:v1.9.0
+    ports:
+      - "127.0.0.1:9096:9091"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9091/-/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks: [agrosmart-jose-obs-net, agrosmart-jose-data-net]
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:11.5.2
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DATE_FORMATS_DEFAULT_TIMEZONE: America/Lima   # Grafana en hora de Perú
+      TZ: America/Lima
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:3300:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 20s
+    networks: [agrosmart-jose-obs-net, agrosmart-jose-data-net]
+    depends_on:
+      prometheus: {condition: service_healthy}
+    restart: unless-stopped
+networks:
+  agrosmart-jose-obs-net:
+    name: agrosmart-jose-obs-net
+  agrosmart-jose-data-net:
+    external: true
+    name: agrosmart-jose-data-net
+  agrosmart-jose-kafka-net:
+    external: true
+    name: agrosmart-jose-kafka-net
+volumes:
+  prometheus_data:
+  grafana_data:

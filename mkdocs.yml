@@ -1,0 +1,69 @@
+site_name: AgroSmart Puno — José (humedad) y Mijael (temperatura)
+site_description: Proyecto Sello Big Data, Unidades 1, 2 y 3 — riesgo agroclimático del altiplano de Puno (humedad del suelo y temperatura)
+site_url: https://jose2207.github.io/papasmart-bigdata/
+repo_url: https://github.com/jose2207/papasmart-bigdata
+repo_name: jose2207/papasmart-bigdata
+edit_uri: ''
+theme:
+  name: material
+  language: es
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: lime
+nav:
+  - Inicio: index.md
+  - Informe del proyecto (U3): informe-proyecto.md
+  - Instalación o ejecución:
+      - Instalación: instalacion.md
+      - Guía de ejecución CMD: guia-ejecucion.md
+  - Uso del sistema: uso.md
+  - Arquitectura o estructura: arquitectura.md
+  - Módulos o funcionalidades: modulos.md
+  - Datos:
+      - Datos: datos.md
+      - Flujo cada 2 minutos: tiempo-real-2-minutos.md
+      - Big Data histórico (263 534 registros): big-data-historico.md
+  - Pruebas y evidencias:
+      - Pruebas y evidencias: pruebas-evidencias.md
+      - DataOps: dataops.md
+      - Hardening: hardening.md
+      - Demo end-to-end: demo.md
+  - Equipo y aporte individual: equipo.md
+  - Repositorio y estándares: repositorio.md
+  - Limitaciones y mejoras: limitaciones.md
+  - Proyecto Sello:
+      - Producto U3 · cumplimiento y rúbrica: proyecto-sello/u3-producto.md
+      - Pregunta central y dimensiones: proyecto-sello/pregunta-general.md
+      - Brief: proyecto-sello/brief.md
+      - Matriz de trazabilidad: proyecto-sello/matriz-trazabilidad.md
+      - Rúbrica U2: proyecto-sello/u2-producto.md
+      - Evidencias S12: proyecto-sello/u2-evidencias.md
+  - José · DimensiónU1 (S1–S5):
+      - Índice: unidad1/index.md
+      - S1 Arquitectura: unidad1/s01-arquitectura.md
+      - S2 PySpark: unidad1/s02-pyspark.md
+      - S3 Calidad y Parquet: unidad1/s03-calidad.md
+      - S4 MLlib: unidad1/s04-mllib.md
+      - S5 Evaluación: unidad1/s05-evaluacion.md
+  - José · DimensiónU2 (S6–S12):
+      - S6 Kafka empresarial: sesiones/s06-kafka-empresa.md
+      - S7 IoT / meteorología: sesiones/s07-iot.md
+      - S8 Streaming: sesiones/s08-spark.md
+      - S9 Observabilidad y costos: sesiones/s09-observabilidad.md
+      - S10 Modelos: sesiones/s10-ml.md
+      - S11 BI/ML: sesiones/s11-bi.md
+      - S12 Sustentación: sesiones/s12-sustentacion.md
+  - Mijael · temperatura:
+      - Índice: mijael/index.md
+      - DimensiónU1 (S1–S5): mijael/dimension-u1.md
+      - DimensiónU2 (S6–S12): mijael/dimension-u2.md
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

@@ -1,0 +1,56 @@
+name: agrosmart-jose-pyspark
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    command: ["postgres", "-c", "timezone=America/Lima", "-c", "log_timezone=America/Lima"]  # hora de Perú
+    environment:
+      TZ: America/Lima
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports: ["127.0.0.1:15432:5432"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+      - ./sql/schema_temperatura.sql:/docker-entrypoint-initdb.d/002_schema_temperatura.sql:ro
+      - ./sql/schema_integracion.sql:/docker-entrypoint-initdb.d/003_schema_integracion.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [agrosmart-jose-data-net]
+  jupyter:
+    build: {context: ., dockerfile: Dockerfile}
+    restart: unless-stopped
+    environment:
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN}
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      KAFKA_BOOTSTRAP: kafka:9092
+      TZ: America/Lima
+      PYSPARK_SUBMIT_ARGS: pyspark-shell
+      AGRO_ROOT: /home/jovyan/work/Sensorhumedad
+    ports:
+      - "127.0.0.1:4489:8888"
+      - "127.0.0.1:4041:4040"
+      - "127.0.0.1:8008:8000"
+    volumes:
+      - ./sesiones:/home/jovyan/work
+      - ../:/home/jovyan/agrosmart-repo:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8888/login', timeout=5)"]
+      interval: 20s
+      timeout: 8s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [agrosmart-jose-data-net]
+networks:
+  agrosmart-jose-data-net: {name: agrosmart-jose-data-net}
+volumes:
+  postgres_data:

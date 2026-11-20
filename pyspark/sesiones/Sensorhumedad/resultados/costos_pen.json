@@ -1,0 +1,42 @@
+{
+  "moneda": "PEN / soles (S/)",
+  "calidad": "ESCENARIOS HIPOTÉTICOS, NO FACTURA NI PRECIO VERIFICADO",
+  "fecha_utc": "2026-11-20T17:21:28.530170+00:00",
+  "tarifa_computo_hora_pen": 0.3,
+  "tarifa_almacen_gb_mes_pen": 0.4,
+  "horas_mes": 720,
+  "bytes_evento_estimados": 393,
+  "factor_almacen": 3.0,
+  "mediciones_db": {
+    "telemetria": 5953,
+    "empresarial": 1639,
+    "predicciones": 4917,
+    "tamano_medio_fila_suelo_bytes": 170.11557198051403,
+    "tamano_medio_fila_empresa_bytes": 223.0,
+    "duracion_ingesta_horas": 349.9678145386111
+  },
+  "escenarios": {
+    "1_eventos_hora": {
+      "eventos_mes": 720,
+      "almacen_gb_estimado": 0.00084888,
+      "computo_pen": 216.0,
+      "almacen_pen": 0.000339552,
+      "total_parcial_pen": 216.000339552
+    },
+    "24_eventos_hora": {
+      "eventos_mes": 17280,
+      "almacen_gb_estimado": 0.02037312,
+      "computo_pen": 216.0,
+      "almacen_pen": 0.008149248000000001,
+      "total_parcial_pen": 216.008149248
+    },
+    "240_eventos_hora": {
+      "eventos_mes": 172800,
+      "almacen_gb_estimado": 0.2037312,
+      "computo_pen": 216.0,
+      "almacen_pen": 0.08149248,
+      "total_parcial_pen": 216.08149248
+    }
+  },
+  "exclusiones": "API comercial, Internet/red, backups reales, infraestructura HA, salarios, electricidad, soporte e impuestos"
+}

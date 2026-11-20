@@ -1,0 +1,64 @@
+{
+  "runId": "20261117T061131Z",
+  "equipo": [
+    "Jose Armando Mamani Poccohuanca",
+    "Mijael Yurins Coaquira Justo"
+  ],
+  "python": "3.11.6",
+  "plataforma": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "compuertas": {
+    "previas": {
+      "PostgreSQL responde y las 10 tablas existen": true,
+      "Kafka responde y los 4 tópicos existen": true,
+      "Modelos de José (humedad 1/2/3 h) existen": true,
+      "Modelo de Mijael (temperatura 1 h) existe": true,
+      "Parquet Gold de U1 (José y Mijael) existe": true,
+      "Prometheus listo": true,
+      "Pushgateway listo": true,
+      "Grafana saludable": true,
+      "Consumer Spark de José activo (heartbeat < 90 s)": true,
+      "Consumer Spark de Mijael activo (heartbeat < 90 s)": true
+    },
+    "calidad": {
+      "[humedad] hay eventos del flujo vivo (24 h)": true,
+      "[humedad] sin nulos en humedad_suelo_pct/fecha_evento": true,
+      "[humedad] humedad_suelo_pct dentro de [0, 100]": true,
+      "[humedad] sin evento_id duplicado": true,
+      "[humedad] PLAUSIBILIDAD: latencia p50 < 60 s": false,
+      "[temperatura] hay eventos del flujo vivo (24 h)": true,
+      "[temperatura] sin nulos en temperatura_c/fecha_evento": true,
+      "[temperatura] temperatura_c dentro de [-60, 60]": true,
+      "[temperatura] sin evento_id duplicado": true,
+      "[temperatura] PLAUSIBILIDAD: latencia p50 < 60 s": false
+    }
+  },
+  "batch": {
+    "kpiLatenciaPipeline": {
+      "humedad": {
+        "n": 36.0,
+        "promedio": 8786.778673166667,
+        "p50": 748.0730719999999,
+        "p95": 30657.6756175,
+        "maximo": 30969.552622,
+        "frac_mayor_1min": 0.6666666666666666
+      },
+      "temperatura": {
+        "n": 36.0,
+        "promedio": 8795.979271861112,
+        "p50": 762.2366625,
+        "p95": 30671.83922675,
+        "maximo": 30983.698669,
+        "frac_mayor_1min": 0.6666666666666666
+      }
+    }
+  },
+  "streaming": {},
+  "observabilidad": {},
+  "advertencias": [
+    "[humedad] p95 de latencia 30658 s > 300 s: el promedio no representa a la mayoría de los eventos",
+    "[temperatura] p95 de latencia 30672 s > 300 s: el promedio no representa a la mayoría de los eventos"
+  ],
+  "estado": "FALLA",
+  "etapaFalla": "calidad",
+  "duracionTotalS": 7.2
+}

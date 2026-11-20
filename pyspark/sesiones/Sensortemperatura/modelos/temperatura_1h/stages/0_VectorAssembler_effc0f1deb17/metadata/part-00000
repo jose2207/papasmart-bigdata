@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.VectorAssembler","timestamp":1795195704198,"sparkVersion":"3.5.0","uid":"VectorAssembler_effc0f1deb17","paramMap":{"outputCol":"features","inputCols":["temperatura_c","hora_seno","hora_coseno"]},"defaultParamMap":{"outputCol":"VectorAssembler_effc0f1deb17__output","handleInvalid":"error"}}

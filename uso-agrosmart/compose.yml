@@ -1,0 +1,107 @@
+name: agrosmart-jose-uso
+x-comun: &comun
+  build:
+    context: .
+  environment:
+    KAFKA_BOOTSTRAP: kafka:9092
+    TOPICO_TELEMETRIA: agrosmart-u2-humedad-telemetria
+    TOPICO_EMPRESARIAL: agrosmart-u2-humedad-empresarial
+    AGRO_LAT: ${AGRO_LAT:--15.84}
+    AGRO_LON: ${AGRO_LON:--70.02}
+    AGRO_UBICACION: ${AGRO_UBICACION:-Puno}
+    UMBRAL_SOLO_DEMO_PCT: ${UMBRAL_SOLO_DEMO_PCT:-20}
+    # --- Dimensión de Mijael (temperatura, Azángaro) ---
+    TOPICO_TELEMETRIA_TEMP: agrosmart-u2-temperatura-telemetria
+    TOPICO_EMPRESARIAL_TEMP: agrosmart-u2-temperatura-empresarial
+    TEMP_LAT: ${TEMP_LAT:--14.91}
+    TEMP_LON: ${TEMP_LON:--70.19}
+    TEMP_UBICACION: ${TEMP_UBICACION:-Azángaro}
+    UMBRAL_HELADA_C: ${UMBRAL_HELADA_C:-0}
+  networks: [agrosmart-jose-kafka-net]
+services:
+  inicializar-topicos:
+    <<: *comun
+    profiles: [herramientas]
+    command: ["python", "-u", "producer/crear_topicos.py"]
+  producer-api-replay:
+    <<: *comun
+    profiles: [replay]
+    volumes:
+      - ../pyspark/sesiones/Sensorhumedad/datos:/datos
+    command: ["python", "-u", "producer/producer_api_humedad.py", "--modo", "replay", "--cantidad", "72"]
+  producer-evento-tardio:
+    <<: *comun
+    profiles: [pruebas]
+    command: ["python", "-u", "producer/producer_tardio_demo.py"]
+  producer-api-continuo:
+    <<: *comun
+    profiles: [continuo]
+    volumes:
+      - ../pyspark/sesiones/Sensorhumedad/datos:/datos
+    command: ["python", "-u", "producer/producer_api_humedad.py", "--modo", "continuo", "--intervalo", "600"]
+    restart: unless-stopped
+  producer-evaluaciones:
+    <<: *comun
+    profiles: [flujo]
+    command: ["python", "-u", "producer/producer_evaluaciones.py"]
+    restart: unless-stopped
+  consumer-verificacion-empresa:
+    <<: *comun
+    profiles: [verificacion]
+    command: ["python", "-u", "consumer/consumer_verificacion_empresa.py"]
+  consumer-verificacion:
+    <<: *comun
+    profiles: [verificacion]
+    command: ["python", "-u", "consumer/consumer_verificacion.py", "--topico", "agrosmart-u2-humedad-telemetria", "--cantidad", "5"]
+  # ================= DIMENSIÓN DE MIJAEL · temperatura exterior (Azángaro) =================
+  producer-temp-replay:
+    <<: *comun
+    profiles: [replay-temperatura]
+    volumes:
+      - ../pyspark/sesiones/Sensortemperatura/datos:/datos
+    command: ["python", "-u", "producer/producer_api_temperatura.py", "--modo", "replay", "--cantidad", "72"]
+  producer-temp-continuo:
+    <<: *comun
+    profiles: [continuo-temperatura]
+    volumes:
+      - ../pyspark/sesiones/Sensortemperatura/datos:/datos
+    command: ["python", "-u", "producer/producer_api_temperatura.py", "--modo", "continuo", "--intervalo", "600"]
+    restart: unless-stopped
+  producer-evaluaciones-temperatura:
+    <<: *comun
+    profiles: [flujo-temperatura]
+    command: ["python", "-u", "producer/producer_evaluaciones_temperatura.py"]
+    restart: unless-stopped
+  producer-evento-tardio-temperatura:
+    <<: *comun
+    profiles: [pruebas-temperatura]
+    command: ["python", "-u", "producer/producer_tardio_temperatura.py"]
+  consumer-verificacion-temp:
+    <<: *comun
+    profiles: [verificacion-temperatura]
+    command: ["python", "-u", "consumer/consumer_verificacion.py", "--topico", "agrosmart-u2-temperatura-telemetria", "--cantidad", "5"]
+  consumer-verificacion-empresa-temp:
+    <<: *comun
+    profiles: [verificacion-temperatura]
+    command: ["python", "-u", "consumer/consumer_verificacion_empresa_temperatura.py"]
+  # ================= FLUJO CADA 2 MINUTOS (José: humedad · Mijael: temperatura) =================
+  producer-humedad-2min:
+    <<: *comun
+    container_name: producer-humedad   # nombre fijo: en los logs aparece "producer-humedad" (sin -2min-1)
+    profiles: [tiempo-real-2min]
+    volumes:
+      - ../pyspark/sesiones/Sensorhumedad/datos:/datos
+    command: ["python", "-u", "producer/producer_api_2min.py", "--dimension", "humedad", "--intervalo", "120"]
+    restart: unless-stopped
+  producer-temperatura-2min:
+    <<: *comun
+    container_name: producer-temperatura   # nombre fijo: en los logs aparece "producer-temperatura" (sin -2min-1)
+    profiles: [tiempo-real-2min]
+    volumes:
+      - ../pyspark/sesiones/Sensortemperatura/datos:/datos
+    command: ["python", "-u", "producer/producer_api_2min.py", "--dimension", "temperatura", "--intervalo", "120"]
+    restart: unless-stopped
+networks:
+  agrosmart-jose-kafka-net:
+    external: true
+    name: agrosmart-jose-kafka-net

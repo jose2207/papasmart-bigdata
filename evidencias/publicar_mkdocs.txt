@@ -1,0 +1,70 @@
+===== PUBLICAR MKDOCS vie 20/11/2026 11:50:23.43 ===== 
+INFO    -  Cleaning site directory
+INFO    -  Building documentation to directory: /home/jovyan/work/_site
+INFO    -  Documentation built in 4.10 seconds
+
+warning: in the working copy of '404.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arquitectura/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/bundle.f1b6f286.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/bundle.f1b6f286.min.js.map', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.da.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.de.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.du.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.es.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.fi.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.fr.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.hu.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.it.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.nl.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.no.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.pt.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.ro.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.ru.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.sv.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/min/lunr.tr.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/tinyseg.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/lunr/wordcut.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/workers/search.f8cc74c7.min.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'assets/javascripts/workers/search.f8cc74c7.min.js.map', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'big-data-historico/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'dataops/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'datos/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'demo/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'equipo/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'guia-ejecucion/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'hardening/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'informe-proyecto/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'instalacion/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'limitaciones/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mijael/dimension-u1/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mijael/dimension-u2/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mijael/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'modulos/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/brief/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/matriz-trazabilidad/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/pregunta-general/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/u2-evidencias/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/u2-producto/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'proyecto-sello/u3-producto/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pruebas-evidencias/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'repositorio/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s06-kafka-empresa/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s07-iot/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s08-spark/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s09-observabilidad/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s10-ml/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s11-bi/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sesiones/s12-sustentacion/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'sitemap.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tiempo-real-2-minutos/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/s01-arquitectura/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/s02-pyspark/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/s03-calidad/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/s04-mllib/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'unidad1/s05-evaluacion/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'uso/index.html', LF will be replaced by CRLF the next time Git touches it
+To https://github.com/jose2207/papasmart-bigdata.git
+ + 371e141...88fb1b0 gh-pages -> gh-pages (forced update)
+OK 

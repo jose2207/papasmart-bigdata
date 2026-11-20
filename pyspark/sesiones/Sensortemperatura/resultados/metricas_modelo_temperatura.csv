@@ -1,0 +1,2 @@
+horizonte_h,modelo,rmse,mae,r2,rmse_validacion,baseline_rmse,n_train,n_validacion,n_prueba
+1,ArbolDecision,1.1834244554649427,0.8316310104438613,0.9425513450466183,1.330133208252961,1.6429210835960728,2530,542,543

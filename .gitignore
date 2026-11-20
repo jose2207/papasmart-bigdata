@@ -1,0 +1,14 @@
+.env
+**/.env
+**/.ipynb_checkpoints/
+**/__pycache__/
+**/.spark-ivy/
+**/.ivy2/
+**/.cache/
+**/checkpoints/
+**/datos/bronze/
+**/datos/*.csv
+**/datos/ids_publicados_continuo.json
+# Evidencias, resultados y modelos SÍ se suben (son pequeños y la rúbrica los pide como verificables)
+*.pyc
+.DS_Store

@@ -1,0 +1,24 @@
+===== EJECUCION COMPLETA vie 20/11/2026  0:47:12.09 ===== 
+>>> Ejecutando U1_Batch_Humedad/U1_AgroSmart_S01_S05_Humedad_Batch.ipynb ...
+OK     85 s  U1_Batch_Humedad/U1_AgroSmart_S01_S05_Humedad_Batch.ipynb
+>>> Ejecutando U1_Batch_Temperatura/U1_Mijael_Temperatura_S01_S05_Batch.ipynb ...
+OK     87 s  U1_Batch_Temperatura/U1_Mijael_Temperatura_S01_S05_Batch.ipynb
+>>> Ejecutando Historico_BigData/U3_BigData_Historico_OpenMeteo.ipynb ...
+OK     230 s  Historico_BigData/U3_BigData_Historico_OpenMeteo.ipynb
+>>> Ejecutando Sensorhumedad/U2_AgroSmart_S06_S12_Humedad_Tiempo_Real.ipynb ...
+OK     150 s  Sensorhumedad/U2_AgroSmart_S06_S12_Humedad_Tiempo_Real.ipynb
+>>> Ejecutando Sensortemperatura/U2_Mijael_Temperatura_S06_S12_Tiempo_Real.ipynb ...
+OK     129 s  Sensortemperatura/U2_Mijael_Temperatura_S06_S12_Tiempo_Real.ipynb
+ Container spark-consumer-humedad Restarting 
+ Container spark-consumer-temperatura Restarting 
+ Container spark-consumer-temperatura Started 
+ Container spark-consumer-humedad Started 
+>>> Ejecutando U3_Integracion/U3_Integracion_DataOps_S13_S14.ipynb ...
+OK     189 s  U3_Integracion/U3_Integracion_DataOps_S13_S14.ipynb
+OK     85 s  U1_Batch_Humedad/U1_AgroSmart_S01_S05_Humedad_Batch.ipynb
+OK     87 s  U1_Batch_Temperatura/U1_Mijael_Temperatura_S01_S05_Batch.ipynb
+OK     230 s  Historico_BigData/U3_BigData_Historico_OpenMeteo.ipynb
+OK     150 s  Sensorhumedad/U2_AgroSmart_S06_S12_Humedad_Tiempo_Real.ipynb
+OK     129 s  Sensortemperatura/U2_Mijael_Temperatura_S06_S12_Tiempo_Real.ipynb
+OK     189 s  U3_Integracion/U3_Integracion_DataOps_S13_S14.ipynb
+FIN 

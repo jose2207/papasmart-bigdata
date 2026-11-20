@@ -1,0 +1,9 @@
+{
+  "evento_id": "3f9a1c2b7d8e4a10b6c5d4e3f2a1b0c9",
+  "fecha_evento": "2026-11-05T15:00:00Z",
+  "ubicacion": "Azángaro",
+  "temperatura_c": 9.4,
+  "origen": "open_meteo_modelado",
+  "modo_publicacion": "replay_historico",
+  "emitido_utc": "2026-11-05T15:00:05+00:00"
+}

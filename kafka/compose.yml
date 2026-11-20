@@ -1,0 +1,58 @@
+name: agrosmart-jose-kafka
+services:
+  kafka:
+    image: apache/kafka:4.0.2
+    hostname: kafka
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:49093:49093"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:49093,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:49093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-broker-api-versions.sh", "--bootstrap-server", "localhost:9092"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 25s
+    networks:
+      agrosmart-jose-kafka-net:
+        aliases: [kafka]
+  kafka-ui:
+    image: ghcr.io/kafbat/kafka-ui:v1.5.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:48086:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: AgroSmart-Puno-U2
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      kafka: {condition: service_healthy}
+    networks: [agrosmart-jose-kafka-net]
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.10.0
+    restart: unless-stopped
+    command: ["--kafka.server=kafka:9092"]
+    ports:
+      - "127.0.0.1:49309:9308"
+    depends_on:
+      kafka: {condition: service_healthy}
+    networks: [agrosmart-jose-kafka-net]
+networks:
+  agrosmart-jose-kafka-net:
+    name: agrosmart-jose-kafka-net
+volumes:
+  kafka_data:

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Telemetría de temperatura (Mijael) — Open-Meteo modelado",
+  "type": "object",
+  "required": [
+    "evento_id",
+    "fecha_evento",
+    "ubicacion",
+    "temperatura_c",
+    "origen",
+    "emitido_utc"
+  ],
+  "properties": {
+    "evento_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "fecha_evento": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC"
+    },
+    "ubicacion": {
+      "type": "string"
+    },
+    "temperatura_c": {
+      "type": "number",
+      "minimum": -60,
+      "maximum": 60,
+      "description": "°C a 2 m (modelo, no termómetro)"
+    },
+    "origen": {
+      "type": "string",
+      "enum": [
+        "open_meteo_modelado",
+        "open_meteo_interpolado_2min",
+        "simulado_carga_inicial"
+      ]
+    },
+    "modo_publicacion": {
+      "type": "string"
+    },
+    "emitido_utc": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}

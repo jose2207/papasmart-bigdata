@@ -1,0 +1,12 @@
+{
+  "evento_id": "uuid-de-ejemplo",
+  "fecha_evento": "2026-11-05T15:00:00+00:00",
+  "ubicacion": "Puno",
+  "humedad_suelo_pct": 18.4,
+  "humedad_aire_pct": 64.0,
+  "origen": "open_meteo_modelado",
+  "humedad_suelo_m3m3": 0.184,
+  "modo_publicacion": "replay_historico",
+  "profundidad_suelo_cm": "0-1",
+  "emitido_utc": "2026-11-05T15:00:05+00:00"
+}

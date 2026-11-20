@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.VectorAssembler","timestamp":1795195348244,"sparkVersion":"3.5.0","uid":"VectorAssembler_815ec40a954b","paramMap":{"inputCols":["humedad_suelo_pct","humedad_aire_pct","hora_seno","hora_coseno"],"outputCol":"features"},"defaultParamMap":{"outputCol":"VectorAssembler_815ec40a954b__output","handleInvalid":"error"}}

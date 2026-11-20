@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evaluación empresarial SIMULADA de humedad (S6)",
+  "type": "object",
+  "required": ["evento_id","evento_telemetria_id","fecha_evento","ubicacion","tipo","estado","humedad_suelo_pct","humedad_aire_pct","umbral_demo_pct","origen","creado_utc"],
+  "properties": {
+    "evento_id": {"type":"string", "minLength":8},
+    "evento_telemetria_id": {"type":"string"},
+    "fecha_evento": {"type":"string", "format":"date-time"},
+    "ubicacion": {"type":"string"},
+    "tipo": {"const":"evaluacion_humedad"},
+    "estado": {"enum":["revision_manual", "seguimiento"]},
+    "humedad_suelo_pct": {"type":"number", "minimum":0,"maximum":100},
+    "humedad_aire_pct": {"type":"number", "minimum":0,"maximum":100},
+    "umbral_demo_pct": {"type":"number", "minimum":0,"maximum":100},
+    "origen": {"const":"decision_empresarial_simulada_desde_open_meteo"},
+    "creado_utc": {"type":"string", "format":"date-time"}
+  }
+}

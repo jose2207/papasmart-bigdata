@@ -1,0 +1,19 @@
+{
+  "ejecutado_utc": "2026-11-20T05:48:34.416205+00:00",
+  "arquitectura": "Lambda (batch + speed + serving)",
+  "filas_bronze_suelo": 1439,
+  "filas_silver_gold": 1392,
+  "filas_descartadas_calidad": 47,
+  "errores_999_detectados": 25,
+  "duplicados_aire_resueltos": 30,
+  "particiones_gold": [
+    "anio_mes=2026-09",
+    "anio_mes=2026-10",
+    "anio_mes=2026-11"
+  ],
+  "modelo_ganador": "Ridge (L2)",
+  "rmse_prueba_pp": 0.9001,
+  "r2_prueba": 0.974,
+  "mae_prueba_pp": 0.5313,
+  "rmse_baseline_promedio_pp": 5.5868
+}

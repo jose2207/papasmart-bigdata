@@ -1,0 +1,5474 @@
+{
+  "id": null,
+  "uid": "agrosmart-puno-humedad-u2-v2",
+  "title": "AgroSmart Puno · Parte 1 Humedad (José) → Parte 2 Temperatura (Mijael)",
+  "tags": [
+    "agrosmart",
+    "bien-explicado",
+    "humedad",
+    "humedad-aire",
+    "humedad-suelo",
+    "kafka",
+    "presentacion",
+    "prometheus",
+    "spark",
+    "temperatura",
+    "u2"
+  ],
+  "timezone": "America/Lima",
+  "schemaVersion": 39,
+  "version": 4,
+  "editable": true,
+  "refresh": "30s",
+  "time": {
+    "from": "now-24h",
+    "to": "now+4h"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "graphTooltip": 1,
+  "fiscalYearStartMonth": 0,
+  "annotations": {
+    "list": []
+  },
+  "templating": {
+    "list": []
+  },
+  "links": [],
+  "description": "Dashboard de presentación: humedad del suelo arriba, temperatura exterior abajo y operación común al final. Open‑Meteo modelado; eventos empresariales simulados.",
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 101,
+      "type": "text",
+      "title": "",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "# 🌾 AGROSMART PUNO · Monitoreo y predicción agroclimática en tiempo real\n**Parte 1 – Humedad del suelo** (José · Puno)  ➜  **Parte 2 – Temperatura exterior** (Mijael · Azángaro)  ➜  **Parte 3 – Operación común** (observabilidad, DataOps, costos).  Fuente: **Open‑Meteo** (datos modelados, no sensores físicos) · flujo cada **2 min** por Kafka → Spark → PostgreSQL. Las predicciones se dibujan en su **hora objetivo**; el rango por defecto incluye las **próximas 4 h** para ver el pronóstico."
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      }
+    },
+    {
+      "id": 102,
+      "type": "row",
+      "title": "🌱 PARTE 1 · HUMEDAD DEL SUELO · José Mamani · Puno  —  1.1 Ahora y pronóstico +1 / +2 / +3 h",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "💧 Suelo · ahora",
+      "description": "Humedad volumétrica 0–1 cm (última lectura).",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#2DD4A4"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT humedad_suelo_pct AS \"Humedad volumétrica del suelo\" FROM eventos_telemetria ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "🌫️ Aire · ahora",
+      "description": "Humedad relativa del aire a 2 m (última lectura).",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#4CC9F0"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT humedad_aire_pct AS \"Humedad relativa del aire\" FROM eventos_telemetria ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 4,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 110,
+      "type": "stat",
+      "title": "🔮 Predicción +1 h",
+      "description": "Pronóstico del modelo para dentro de 1 hora.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FFD166"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT prediccion_pct AS \"Predicción +1 h\" FROM predicciones_humedad WHERE horizonte_h=1 ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 111,
+      "type": "stat",
+      "title": "🔮 Predicción +2 h",
+      "description": "Pronóstico del modelo para dentro de 2 horas.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF9863"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT prediccion_pct AS \"Predicción +2 h\" FROM predicciones_humedad WHERE horizonte_h=2 ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 112,
+      "type": "stat",
+      "title": "🔮 Predicción +3 h",
+      "description": "Pronóstico del modelo para dentro de 3 horas.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#BC8CFF"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT prediccion_pct AS \"Predicción +3 h\" FROM predicciones_humedad WHERE horizonte_h=3 ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 113,
+      "type": "stat",
+      "title": "📈 Tendencia a 3 h (pp)",
+      "description": "Predicción +3 h menos la humedad actual, en puntos porcentuales. Rojo = el suelo se seca.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 2,
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F25F5C",
+                "value": null
+              },
+              {
+                "color": "#FFD166",
+                "value": -0.05
+              },
+              {
+                "color": "#2DD4A4",
+                "value": 0.05
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT (SELECT prediccion_pct FROM predicciones_humedad WHERE horizonte_h=3 ORDER BY fecha_evento DESC LIMIT 1) - (SELECT humedad_suelo_pct FROM eventos_telemetria ORDER BY fecha_evento DESC LIMIT 1) AS \"Cambio esperado\"",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 20,
+        "y": 5,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "📊 Humedad del suelo observada vs. predicciones +1 / +2 / +3 h",
+      "description": "La medición modelada se dibuja en fecha_evento; cada pronóstico en fecha_objetivo. En replay histórico las inferencias pueden ser retrospectivas. Comparar alineando las fechas objetivo, no con el momento de publicación.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "Humedad volumétrica (%)",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Observada · suelo (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Predicción +1 h (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FFD166"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Predicción +2 h (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF9863"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Predicción +3 h (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#BC8CFF"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    3,
+                    4
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_evento), humedad_suelo_pct AS \"Observada · suelo (%)\" FROM eventos_telemetria WHERE $__timeFilter(fecha_evento) ORDER BY fecha_evento",
+          "editorMode": "code",
+          "rawQuery": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_objetivo), prediccion_pct AS \"Predicción +1 h (%)\" FROM predicciones_humedad WHERE $__timeFilter(fecha_objetivo) AND horizonte_h=1 ORDER BY fecha_objetivo",
+          "editorMode": "code",
+          "rawQuery": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_objetivo), prediccion_pct AS \"Predicción +2 h (%)\" FROM predicciones_humedad WHERE $__timeFilter(fecha_objetivo) AND horizonte_h=2 ORDER BY fecha_objetivo",
+          "editorMode": "code",
+          "rawQuery": true
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_objetivo), prediccion_pct AS \"Predicción +3 h (%)\" FROM predicciones_humedad WHERE $__timeFilter(fecha_objetivo) AND horizonte_h=3 ORDER BY fecha_objetivo",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 16,
+        "h": 12
+      }
+    },
+    {
+      "id": 114,
+      "type": "table",
+      "title": "🕒 Pronóstico vigente · humedad",
+      "description": "Último pronóstico de cada horizonte, en hora de Lima.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Δ vs ahora (pp)"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#F25F5C",
+                      "value": null
+                    },
+                    {
+                      "color": "#FFD166",
+                      "value": -0.05
+                    },
+                    {
+                      "color": "#2DD4A4",
+                      "value": 0.05
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Horizonte"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 95
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "WITH u AS (SELECT DISTINCT ON (horizonte_h) horizonte_h, fecha_objetivo, prediccion_pct FROM predicciones_humedad ORDER BY horizonte_h, fecha_evento DESC), a AS (SELECT humedad_suelo_pct FROM eventos_telemetria ORDER BY fecha_evento DESC LIMIT 1) SELECT '+' || horizonte_h || ' h' AS \"Horizonte\", to_char(fecha_objetivo AT TIME ZONE 'America/Lima','DD/MM HH24:MI') AS \"Hora objetivo\", ROUND(prediccion_pct::numeric,2) AS \"Predicción (%)\", ROUND((prediccion_pct - a.humedad_suelo_pct)::numeric,2) AS \"Δ vs ahora (pp)\" FROM u, a ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 10,
+        "w": 8,
+        "h": 12
+      }
+    },
+    {
+      "id": 103,
+      "type": "row",
+      "title": "🌱 1.2 Telemetría en vivo (S7) · suelo y aire",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Humedad volumétrica del suelo · 0–1 cm",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "%",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Humedad del suelo (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_evento), humedad_suelo_pct AS \"Humedad del suelo (%)\" FROM eventos_telemetria WHERE $__timeFilter(fecha_evento) ORDER BY fecha_evento",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Humedad relativa del aire · 2 m",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "%",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Humedad del aire (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4CC9F0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(fecha_evento), humedad_aire_pct AS \"Humedad del aire (%)\" FROM eventos_telemetria WHERE $__timeFilter(fecha_evento) ORDER BY fecha_evento",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 23,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "Cambio entre lecturas consecutivas · suelo (pp)",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 60,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cambio del suelo (pp)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "min",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "WITH serie AS (SELECT fecha_evento, humedad_suelo_pct, LAG(humedad_suelo_pct) OVER (PARTITION BY ubicacion ORDER BY fecha_evento) AS humedad_anterior FROM eventos_telemetria WHERE $__timeFilter(fecha_evento)) SELECT $__time(fecha_evento), (humedad_suelo_pct - humedad_anterior) AS \"Cambio del suelo (pp)\" FROM serie WHERE humedad_anterior IS NOT NULL ORDER BY fecha_evento",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 16,
+        "h": 7
+      }
+    },
+    {
+      "id": 115,
+      "type": "table",
+      "title": "Origen de las lecturas · humedad",
+      "description": "Distingue carga simulada, API Open‑Meteo e interpolación cada 2 min.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT origen AS \"Origen\", COUNT(*) AS \"Lecturas\", to_char(MAX(fecha_evento) AT TIME ZONE 'America/Lima','DD/MM HH24:MI') AS \"Última\" FROM eventos_telemetria GROUP BY origen ORDER BY 2 DESC",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 31,
+        "w": 8,
+        "h": 7
+      }
+    },
+    {
+      "id": 104,
+      "type": "row",
+      "title": "🌱 1.3 Spark Structured Streaming (S8) · ventanas de 1 h",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 38,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Promedio por ventana · humedad del suelo",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "always",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "pointSize": 4
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Suelo · media por ventana (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(inicio), humedad_suelo_media_pct AS \"Suelo · media por ventana (%)\" FROM ventanas_humedad WHERE $__timeFilter(inicio) ORDER BY inicio",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 39,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "id": 24,
+      "type": "timeseries",
+      "title": "Promedio por ventana · humedad del aire",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "always",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "pointSize": 4
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Aire · media por ventana (%)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4CC9F0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__time(inicio), humedad_aire_media_pct AS \"Aire · media por ventana (%)\" FROM ventanas_humedad WHERE $__timeFilter(inicio) ORDER BY inicio",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 39,
+        "w": 12,
+        "h": 8
+      }
+    },
+    {
+      "id": 105,
+      "type": "row",
+      "title": "🌱 1.4 Eventos empresariales simulados (S6)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 47,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Evaluaciones de humedad por hora",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 70,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Evaluaciones por hora"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__timeGroupAlias(fecha_evento,'1h'), COUNT(*) AS \"Evaluaciones por hora\" FROM eventos_empresariales WHERE $__timeFilter(fecha_evento) GROUP BY 1 ORDER BY 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 48,
+        "w": 14,
+        "h": 8
+      }
+    },
+    {
+      "id": 12,
+      "type": "table",
+      "title": "Estado de las evaluaciones de humedad",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT estado AS \"Estado de evaluación\", COUNT(*) AS \"Eventos\", ROUND(AVG(humedad_suelo_pct)::numeric,2) AS \"Humedad suelo media (%)\" FROM eventos_empresariales GROUP BY estado ORDER BY \"Eventos\" DESC",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 14,
+        "y": 48,
+        "w": 10,
+        "h": 8
+      }
+    },
+    {
+      "id": 106,
+      "type": "row",
+      "title": "🌱 1.5 Modelos predictivos (S10 / S11) · horizontes 1, 2 y 3 h",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 56,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 13,
+      "type": "table",
+      "title": "Modelos elegidos · desempeño en prueba",
+      "description": "RMSE/MAE en puntos porcentuales; la persistencia (repetir el último valor) es la línea base.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT horizonte_h AS \"Horizonte (h)\", modelo AS \"Modelo elegido\", ROUND(rmse::numeric,4) AS \"RMSE (pp)\", ROUND(mae::numeric,4) AS \"MAE (pp)\", ROUND(r2::numeric,4) AS \"R²\", ROUND(baseline_rmse::numeric,4) AS \"RMSE persistencia (pp)\", n_prueba AS \"Muestras de prueba\" FROM metricas_modelo ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 57,
+        "w": 24,
+        "h": 6
+      }
+    },
+    {
+      "id": 14,
+      "type": "table",
+      "title": "Comparación de los cuatro algoritmos · tres horizontes",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT horizonte_h AS \"Horizonte (h)\", modelo AS \"Algoritmo\", ROUND(rmse_validacion::numeric,4) AS \"RMSE validación (pp)\", ROUND(rmse_prueba::numeric,4) AS \"RMSE prueba (pp)\", ROUND(mae_prueba::numeric,4) AS \"MAE prueba (pp)\", ROUND(r2_prueba::numeric,4) AS \"R² prueba\", CASE WHEN seleccionado THEN 'Sí' ELSE 'No' END AS \"Elegido\" FROM comparacion_modelos ORDER BY horizonte_h,rmse_validacion",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 63,
+        "w": 24,
+        "h": 10
+      }
+    },
+    {
+      "id": 25,
+      "type": "barchart",
+      "title": "RMSE de prueba · modelo elegido vs. persistencia",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 3,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "gradientMode": "hue"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Modelo elegido · RMSE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#2DD4A4"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Persistencia · RMSE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#8A8F98"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "orientation": "vertical",
+        "barWidth": 0.7,
+        "groupWidth": 0.75,
+        "showValue": "always",
+        "xTickLabelRotation": 0,
+        "legend": {
+          "showLegend": true,
+          "placement": "bottom",
+          "displayMode": "list"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT CONCAT(horizonte_h, ' h') AS \"Horizonte\", ROUND(rmse::numeric,4) AS \"Modelo elegido · RMSE\", ROUND(baseline_rmse::numeric,4) AS \"Persistencia · RMSE\" FROM metricas_modelo ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 73,
+        "w": 14,
+        "h": 8
+      }
+    },
+    {
+      "id": 15,
+      "type": "table",
+      "title": "Predicciones guardadas · retrospectivas vs. prospectivas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT horizonte_h AS \"Horizonte (h)\", COUNT(*) AS \"Total\", SUM(CASE WHEN es_retro THEN 1 ELSE 0 END) AS \"Retrospectivas\", SUM(CASE WHEN NOT es_retro THEN 1 ELSE 0 END) AS \"Prospectivas\" FROM predicciones_humedad GROUP BY horizonte_h ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 14,
+        "y": 73,
+        "w": 10,
+        "h": 8
+      }
+    },
+    {
+      "id": 107,
+      "type": "row",
+      "title": "🌱 1.6 Observabilidad de la humedad (S9) · Prometheus / Kafka / Spark",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 81,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Lecturas guardadas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#2DD4A4"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Lecturas recibidas\" FROM eventos_telemetria",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 82,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Evaluaciones simuladas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#2DD4A4"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Evaluaciones simuladas\" FROM eventos_empresariales",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 6,
+        "y": 82,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Predicciones registradas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FFD166"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Predicciones guardadas\" FROM predicciones_humedad",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 82,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Consultas Spark activas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F25F5C",
+                "value": null
+              },
+              {
+                "color": "#2DD4A4",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Activas\" FROM metricas_pipeline WHERE activa AND consulta NOT LIKE 'temp_%' AND observado_utc >= NOW() - INTERVAL '2 minutes'",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 18,
+        "y": 82,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Duración por microlote Spark",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_duracion_lote_ms{consulta!~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 86,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 19,
+      "type": "timeseries",
+      "title": "Antigüedad del heartbeat Spark",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "#F25F5C",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_edad_heartbeat_segundos{consulta!~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 86,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 18,
+      "type": "timeseries",
+      "title": "Retraso Kafka (offsets)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_retraso_offsets{consulta!~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 93,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "Kafka · último offset por tópico de humedad",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "kafka_topic_partition_current_offset{topic=~\"agrosmart-u2-humedad-.*\"}",
+          "legendFormat": "{{topic}} [{{partition}}]",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 93,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 200,
+      "type": "text",
+      "title": "",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "---\n# 🌡️ PARTE 2 · TEMPERATURA EXTERIOR — MIJAEL · Azángaro\n¿Qué temperatura se espera **dentro de 1 hora** y hay **riesgo de helada**? Umbral didáctico: **0 °C**."
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 100,
+        "w": 24,
+        "h": 3
+      }
+    },
+    {
+      "id": 201,
+      "type": "row",
+      "title": "🌡️ PARTE 2 · TEMPERATURA · MIJAEL Coaquira · Azángaro  —  2.1 Ahora y pronóstico +1 h",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 103,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 202,
+      "type": "stat",
+      "title": "🌡️ Temperatura · ahora",
+      "description": "Temperatura del aire a 2 m (última lectura).",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF7A45"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT temperatura_c AS \"Temperatura 2 m\" FROM eventos_temperatura WHERE fecha_evento <= NOW() ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 203,
+      "type": "stat",
+      "title": "🔮 Predicción +1 h",
+      "description": "Pronóstico del modelo para dentro de 1 hora.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FFD166"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT prediccion_c AS \"Predicción +1 h\" FROM predicciones_temperatura WHERE horizonte_h=1 ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 4,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 214,
+      "type": "stat",
+      "title": "📈 Cambio esperado en 1 h",
+      "description": "Predicción +1 h menos la temperatura actual.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#4CC9F0",
+                "value": null
+              },
+              {
+                "color": "#FFD166",
+                "value": -0.2
+              },
+              {
+                "color": "#FF7A45",
+                "value": 0.2
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT (SELECT prediccion_c FROM predicciones_temperatura WHERE horizonte_h=1 ORDER BY fecha_evento DESC LIMIT 1) - (SELECT temperatura_c FROM eventos_temperatura WHERE fecha_evento <= NOW() ORDER BY fecha_evento DESC LIMIT 1) AS \"Δ °C\"",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 215,
+      "type": "stat",
+      "title": "❄️ Riesgo de helada · próxima hora",
+      "description": "Según la predicción +1 h: ≤ 0 °C helada, 0–3 °C precaución, > 3 °C sin riesgo (umbral didáctico).",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF7A45"
+          },
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": -100,
+                "to": 0,
+                "result": {
+                  "text": "HELADA",
+                  "color": "#4361EE",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 0.0001,
+                "to": 3,
+                "result": {
+                  "text": "PRECAUCIÓN",
+                  "color": "#F4A259",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 3.0001,
+                "to": 100,
+                "result": {
+                  "text": "SIN RIESGO",
+                  "color": "#2A9D8F",
+                  "index": 2
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT prediccion_c AS \"Riesgo\" FROM predicciones_temperatura WHERE horizonte_h=1 ORDER BY fecha_evento DESC LIMIT 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 216,
+      "type": "stat",
+      "title": "🥶 Mínima últimas 24 h",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#4CC9F0"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT MIN(temperatura_c) AS \"Mínima\" FROM eventos_temperatura WHERE fecha_evento BETWEEN NOW() - INTERVAL '24 hours' AND NOW()",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 204,
+      "type": "stat",
+      "title": "Horas ≤ 0 °C · últimas 24 h",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#2A9D8F",
+                "value": null
+              },
+              {
+                "color": "#4361EE",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Horas con helada\" FROM eventos_temperatura WHERE fecha_evento BETWEEN NOW() - INTERVAL '24 hours' AND NOW() AND temperatura_c <= 0",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 20,
+        "y": 104,
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": 208,
+      "type": "timeseries",
+      "title": "📊 Temperatura observada vs. predicción +1 h",
+      "description": "La medición modelada se dibuja en fecha_evento; cada predicción en su fecha_objetivo (+1 h). En replay histórico las inferencias pueden ser retrospectivas (es_retro). La línea roja marca 0 °C.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "Temperatura 2 m (°C)",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(67,97,238,0.15)",
+                "value": null
+              },
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Observada · temperatura (°C)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF7A45"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Predicción +1 h (°C)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FFD166"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    4
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT fecha_evento AS time, temperatura_c AS \"Observada · temperatura (°C)\" FROM eventos_temperatura WHERE $__timeFilter(fecha_evento) ORDER BY 1",
+          "editorMode": "code",
+          "rawQuery": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT fecha_objetivo AS time, prediccion_c AS \"Predicción +1 h (°C)\" FROM predicciones_temperatura WHERE horizonte_h=1 AND $__timeFilter(fecha_objetivo) ORDER BY 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 109,
+        "w": 16,
+        "h": 12
+      }
+    },
+    {
+      "id": 217,
+      "type": "table",
+      "title": "🕒 Pronóstico vigente · temperatura",
+      "description": "Último pronóstico, en hora de Lima.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Riesgo"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "HELADA": {
+                        "color": "#4361EE",
+                        "index": 0
+                      },
+                      "PRECAUCIÓN": {
+                        "color": "#F4A259",
+                        "index": 1
+                      },
+                      "SIN RIESGO": {
+                        "color": "#2A9D8F",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Horizonte"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 95
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "WITH u AS (SELECT DISTINCT ON (horizonte_h) horizonte_h, fecha_objetivo, prediccion_c FROM predicciones_temperatura ORDER BY horizonte_h, fecha_evento DESC), a AS (SELECT temperatura_c FROM eventos_temperatura WHERE fecha_evento <= NOW() ORDER BY fecha_evento DESC LIMIT 1) SELECT '+' || horizonte_h || ' h' AS \"Horizonte\", to_char(fecha_objetivo AT TIME ZONE 'America/Lima','DD/MM HH24:MI') AS \"Hora objetivo\", ROUND(prediccion_c::numeric,2) AS \"Predicción (°C)\", ROUND((prediccion_c - a.temperatura_c)::numeric,2) AS \"Δ vs ahora (°C)\", CASE WHEN prediccion_c <= 0 THEN 'HELADA' WHEN prediccion_c <= 3 THEN 'PRECAUCIÓN' ELSE 'SIN RIESGO' END AS \"Riesgo\" FROM u, a ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 109,
+        "w": 8,
+        "h": 12
+      }
+    },
+    {
+      "id": 218,
+      "type": "row",
+      "title": "🌡️ 2.2 Telemetría y ventanas de Spark (S7 / S8)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 121,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 209,
+      "type": "timeseries",
+      "title": "Media, mínima y máxima por ventana de 1 h",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "gradientMode": "opacity",
+            "showPoints": "always",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "pointSize": 4
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Media (°C)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF7A45"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mínima (°C)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#4CC9F0"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    4,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Máxima (°C)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#F25F5C"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    4,
+                    4
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT inicio AS time, temp_media_c AS \"Media (°C)\", temp_min_c AS \"Mínima (°C)\", temp_max_c AS \"Máxima (°C)\" FROM ventanas_temperatura WHERE $__timeFilter(inicio) ORDER BY 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 122,
+        "w": 16,
+        "h": 8
+      }
+    },
+    {
+      "id": 219,
+      "type": "table",
+      "title": "Origen de las lecturas · temperatura",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT origen AS \"Origen\", COUNT(*) AS \"Lecturas\", to_char(MAX(fecha_evento) AT TIME ZONE 'America/Lima','DD/MM HH24:MI') AS \"Última\" FROM eventos_temperatura GROUP BY origen ORDER BY 2 DESC",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 122,
+        "w": 8,
+        "h": 8
+      }
+    },
+    {
+      "id": 220,
+      "type": "row",
+      "title": "🌡️ 2.3 Evaluaciones de riesgo de helada simuladas (S6)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 130,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 221,
+      "type": "timeseries",
+      "title": "Evaluaciones de helada por hora",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 70,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Evaluaciones por hora"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF7A45"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT $__timeGroupAlias(fecha_evento,'1h'), COUNT(*) AS \"Evaluaciones por hora\" FROM eventos_empresariales_temperatura WHERE $__timeFilter(fecha_evento) GROUP BY 1 ORDER BY 1",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 131,
+        "w": 14,
+        "h": 8
+      }
+    },
+    {
+      "id": 210,
+      "type": "table",
+      "title": "Estado de las evaluaciones de helada",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT estado AS \"Estado\", COUNT(*) AS \"Eventos\", ROUND(MIN(temperatura_c)::numeric,1) AS \"Mínima (°C)\", ROUND(AVG(temperatura_c)::numeric,1) AS \"Media (°C)\" FROM eventos_empresariales_temperatura WHERE $__timeFilter(fecha_evento) GROUP BY estado ORDER BY 2 DESC",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 14,
+        "y": 131,
+        "w": 10,
+        "h": 8
+      }
+    },
+    {
+      "id": 222,
+      "type": "row",
+      "title": "🌡️ 2.4 Modelo predictivo de temperatura (S10 / S11) · horizonte 1 h",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 139,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 211,
+      "type": "table",
+      "title": "Comparación de los cuatro algoritmos · +1 h",
+      "description": "La elección se hace con validación; la prueba mide generalización.",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT modelo AS \"Algoritmo\", ROUND(rmse_validacion::numeric,4) AS \"RMSE validación (°C)\", ROUND(rmse_prueba::numeric,4) AS \"RMSE prueba (°C)\", ROUND(mae_prueba::numeric,4) AS \"MAE prueba (°C)\", ROUND(r2_prueba::numeric,4) AS \"R² prueba\", CASE WHEN seleccionado THEN 'Sí' ELSE 'No' END AS \"Elegido\" FROM comparacion_modelos_temperatura ORDER BY rmse_validacion",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 140,
+        "w": 24,
+        "h": 7
+      }
+    },
+    {
+      "id": 212,
+      "type": "table",
+      "title": "Modelo elegido vs. persistencia",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT modelo AS \"Modelo\", ROUND(rmse::numeric,4) AS \"RMSE modelo (°C)\", ROUND(baseline_rmse::numeric,4) AS \"RMSE persistencia (°C)\", ROUND(((1-rmse/NULLIF(baseline_rmse,0))*100)::numeric,1) AS \"Mejora (%)\", n_prueba AS \"n prueba\" FROM metricas_modelo_temperatura",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 147,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 223,
+      "type": "barchart",
+      "title": "RMSE de prueba · modelo elegido vs. persistencia",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 3,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "gradientMode": "hue"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Modelo elegido · RMSE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF7A45"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Persistencia · RMSE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#8A8F98"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "orientation": "vertical",
+        "barWidth": 0.7,
+        "groupWidth": 0.75,
+        "showValue": "always",
+        "xTickLabelRotation": 0,
+        "legend": {
+          "showLegend": true,
+          "placement": "bottom",
+          "displayMode": "list"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT CONCAT('+', horizonte_h, ' h') AS \"Horizonte\", ROUND(rmse::numeric,4) AS \"Modelo elegido · RMSE\", ROUND(baseline_rmse::numeric,4) AS \"Persistencia · RMSE\" FROM metricas_modelo_temperatura ORDER BY horizonte_h",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 147,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 224,
+      "type": "row",
+      "title": "🌡️ 2.5 Observabilidad de la temperatura (S9)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 154,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 205,
+      "type": "stat",
+      "title": "Lecturas guardadas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF7A45"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Lecturas\" FROM eventos_temperatura",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 155,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 206,
+      "type": "stat",
+      "title": "Evaluaciones simuladas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FF7A45"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Evaluaciones\" FROM eventos_empresariales_temperatura",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 6,
+        "y": 155,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 225,
+      "type": "stat",
+      "title": "Predicciones registradas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#FFD166"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS \"Predicciones\" FROM predicciones_temperatura",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 155,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 207,
+      "type": "stat",
+      "title": "Consultas Spark activas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#F25F5C",
+                "value": null
+              },
+              {
+                "color": "#2DD4A4",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) FILTER (WHERE activa AND observado_utc > NOW() - INTERVAL '2 minutes') AS \"Activas\" FROM metricas_pipeline WHERE consulta LIKE 'temp_%'",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 18,
+        "y": 155,
+        "w": 6,
+        "h": 4
+      }
+    },
+    {
+      "id": 226,
+      "type": "timeseries",
+      "title": "Duración por microlote Spark",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_duracion_lote_ms{consulta=~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 159,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 227,
+      "type": "timeseries",
+      "title": "Antigüedad del heartbeat Spark",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "#F25F5C",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_edad_heartbeat_segundos{consulta=~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 159,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 228,
+      "type": "timeseries",
+      "title": "Retraso Kafka (offsets)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_retraso_offsets{consulta=~\"temp_.*\"}",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 166,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 229,
+      "type": "timeseries",
+      "title": "Kafka · último offset por tópico de temperatura",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "kafka_topic_partition_current_offset{topic=~\"agrosmart-u2-temperatura-.*\"}",
+          "legendFormat": "{{topic}} [{{partition}}]",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 166,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 300,
+      "type": "text",
+      "title": "",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "---\n# ⚙️ PARTE 3 · OPERACIÓN COMÚN — salud del sistema, DataOps y costos"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 173,
+        "w": 24,
+        "h": 2
+      }
+    },
+    {
+      "id": 301,
+      "type": "row",
+      "title": "⚙️ 3.1 Salud general y actividad de todas las consultas Spark",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 175,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Exportador y conexión a PostgreSQL",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "up{job=\"agrosmart_exporter\"}",
+          "legendFormat": "Exportador activo",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_exportador_consulta_ok",
+          "legendFormat": "PostgreSQL responde",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 176,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "Consultas Spark activas (1 = activa)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisBorderShow": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_consulta_activa",
+          "legendFormat": "{{consulta}}",
+          "range": true
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 176,
+        "w": 12,
+        "h": 7
+      }
+    },
+    {
+      "id": 309,
+      "type": "row",
+      "title": "⚙️ 3.2 DataOps · última ejecución integrada (compuertas y manifiesto)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 183,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 302,
+      "title": "Estado de la última ejecución",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "OK / ADVERTENCIA / FALLA según las compuertas de la última corrida del cuaderno U3.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT estado AS \"Estado\" FROM ejecuciones_integracion ORDER BY ejecutado_utc DESC LIMIT 1",
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 303,
+      "title": "Compuertas aprobadas",
+      "type": "stat",
+      "gridPos": {
+        "x": 4,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.9
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "custom": {},
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT compuertas_ok::float/NULLIF(compuertas_total,0) AS \"Compuertas OK\" FROM ejecuciones_integracion ORDER BY ejecutado_utc DESC LIMIT 1",
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 304,
+      "title": "Antigüedad de la última ejecución",
+      "type": "stat",
+      "gridPos": {
+        "x": 8,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "Sin este panel, un tablero alimentado por una corrida vieja parece estar vivo.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 21600
+              },
+              {
+                "color": "red",
+                "value": 86400
+              }
+            ]
+          },
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "agrosmart_prom"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "agrosmart_prom"
+          },
+          "expr": "agrosmart_int_ultima_ejecucion_edad_segundos",
+          "instant": true,
+          "legendFormat": "__auto"
+        }
+      ]
+    },
+    {
+      "id": 305,
+      "title": "Latencia p50 · humedad (s)",
+      "type": "stat",
+      "gridPos": {
+        "x": 12,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "custom": {},
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT lat_p50_hum_s AS \"p50 humedad\" FROM ejecuciones_integracion WHERE lat_p50_hum_s IS NOT NULL ORDER BY ejecutado_utc DESC LIMIT 1",
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 306,
+      "title": "Latencia p95 · humedad (s)",
+      "type": "stat",
+      "gridPos": {
+        "x": 16,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "La cola: no publiques solo el promedio.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 300
+              }
+            ]
+          },
+          "custom": {},
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT lat_p95_hum_s AS \"p95 humedad\" FROM ejecuciones_integracion WHERE lat_p95_hum_s IS NOT NULL ORDER BY ejecutado_utc DESC LIMIT 1",
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 307,
+      "title": "Latencia p50 / p95 · temperatura (s)",
+      "type": "stat",
+      "gridPos": {
+        "x": 20,
+        "y": 184,
+        "w": 4,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 300
+              }
+            ]
+          },
+          "custom": {},
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT lat_p95_temp_s AS \"p95 temperatura\" FROM ejecuciones_integracion WHERE lat_p95_temp_s IS NOT NULL ORDER BY ejecutado_utc DESC LIMIT 1",
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 308,
+      "type": "table",
+      "title": "Historial de ejecuciones integradas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "OK": {
+                        "color": "#2A9D8F",
+                        "index": 0
+                      },
+                      "ADVERTENCIA": {
+                        "color": "#F4A259",
+                        "index": 1
+                      },
+                      "FALLA": {
+                        "color": "#F25F5C",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Fecha"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsLocal"
+              },
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT ejecutado_utc AS \"Fecha\", run_id AS \"Corrida\", estado AS \"Estado\", compuertas_ok||'/'||compuertas_total AS \"Compuertas\", ROUND(duracion_s::numeric,1) AS \"Duración (s)\", ROUND(lat_p50_hum_s::numeric,2) AS \"p50 hum (s)\", ROUND(lat_p95_hum_s::numeric,2) AS \"p95 hum (s)\", ROUND(lat_p50_temp_s::numeric,2) AS \"p50 temp (s)\", ROUND(lat_p95_temp_s::numeric,2) AS \"p95 temp (s)\", ROUND(pred_error_hum_1h::numeric,4) AS \"Error +1h hum\", ROUND(pred_error_temp_1h::numeric,4) AS \"Error +1h temp (°C)\" FROM ejecuciones_integracion ORDER BY ejecutado_utc DESC LIMIT 20",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 188,
+        "w": 24,
+        "h": 8
+      }
+    },
+    {
+      "id": 310,
+      "type": "row",
+      "title": "⚙️ 3.3 Costos mensuales estimados en soles (S9)",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 196,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 21,
+      "type": "table",
+      "title": "Escenarios de costos mensuales (S/) · estimaciones didácticas",
+      "description": "",
+      "datasource": {
+        "type": "postgres",
+        "uid": "agrosmart_pg"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": true,
+            "minWidth": 90
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Elegido"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "Sí": {
+                        "text": "✔ Sí",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "No": {
+                        "text": "—",
+                        "color": "transparent",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "md",
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "postgres",
+            "uid": "agrosmart_pg"
+          },
+          "format": "table",
+          "rawSql": "SELECT nombre AS \"Escenario\", eventos_mes AS \"Eventos/mes\", ROUND(almacenamiento_gb::numeric,7) AS \"Almacenamiento (GB)\", ROUND(computo_pen::numeric,2) AS \"Cómputo (S/)\", ROUND(almacenamiento_pen::numeric,4) AS \"Almacenamiento (S/)\", ROUND(total_pen::numeric,2) AS \"Costo mensual (S/)\" FROM escenarios_costos ORDER BY eventos_hora",
+          "editorMode": "code",
+          "rawQuery": true
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 197,
+        "w": 24,
+        "h": 7
+      }
+    },
+    {
+      "id": 311,
+      "type": "row",
+      "title": "📝 Aclaraciones para la sustentación",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 204,
+        "w": 24,
+        "h": 1
+      }
+    },
+    {
+      "id": 108,
+      "type": "text",
+      "title": "Humedad (José)",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "**Datos:** Open-Meteo proporciona estimaciones meteorológicas del suelo superficial (0–1 cm) y humedad relativa del aire (2 m), no mediciones de sondas instaladas. **Eventos de negocio:** evaluaciones simuladas. **S8:** las ventanas y el watermark dependen del pipeline Spark; las curvas muestran su resultado persistido. **S10:** comparar pronósticos solo en su `fecha_objetivo` y distinguir replay retrospectivo. **S9:** el consumo y los costos mostrados son académicos.\n\n**Rúbrica:** presenta los eventos Kafka, checkpoints y consultas activas durante una demo; el dashboard es evidencia de BI/ML y observabilidad, pero no sustituye la verificación en vivo."
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 205,
+        "w": 12,
+        "h": 6
+      }
+    },
+    {
+      "id": 213,
+      "type": "text",
+      "title": "Temperatura (Mijael)",
+      "transparent": true,
+      "options": {
+        "mode": "markdown",
+        "content": "**TEMPERATURA EXTERIOR · Azángaro** · Open-Meteo (datos meteorológicos **modelados**, no termómetro) · parte de la historia es **simulada** (carga inicial) y está etiquetada en `origen`. El umbral de helada (0 °C) es **didáctico**, no una alerta oficial. Esta fila responde a la pregunta *«¿qué temperatura exterior se espera en Azángaro una hora después?»* y se combina con la humedad del suelo (José) en la misma variable de interés: el riesgo agroclimático del altiplano."
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 205,
+        "w": 12,
+        "h": 6
+      }
+    }
+  ],
+  "weekStart": "monday"
+}

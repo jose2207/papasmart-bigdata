@@ -1,0 +1,10 @@
+Modelo,Variables,RMSE_C,MAE_C,R2
+Persistencia (baseline),—,1.4965,1.249,0.9204
+Lineal,completo (con lags),0.9155,0.7028,0.9702
+Ridge,completo (con lags),0.9673,0.7495,0.9668
+Random Forest,completo (con lags),1.3939,1.0236,0.931
+GBT,completo (con lags),1.3911,0.9651,0.9312
+Lineal,desplegable en U2,0.9728,0.7647,0.9664
+Ridge,desplegable en U2,1.073,0.8389,0.9591
+Random Forest,desplegable en U2,2.0806,1.6467,0.8462
+GBT,desplegable en U2,1.3643,0.9502,0.9339
